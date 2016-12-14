@@ -1,0 +1,363 @@
+#!/bin/bash
+#
+#  Copyright (c) 2003-2006 Daniel Robert Bradley
+#
+#  This file is the first program executed when Securizant is booted.
+#
+
+#Kernel options passed in
+
+VFS_IMAGE=vfs.e2
+if [ -n "$vfs" ]
+then
+	VFS_IMAGE=$vfs
+fi
+
+SYSTEM_IMAGE=usr.e2
+if [ -n "$system" ]
+then
+	SYSTEM_IMAGE=$system
+fi
+
+SYSTEM_MOUNT=/usr
+if [ -n "$system_mount" ]
+then
+	SYSTEM_MOUNT=$system_mount
+fi
+
+PATH=/bin
+BASH=bash
+CAT=cat
+INSMOD=insmod
+MOUNT=mount
+UMOUNT=umount
+
+PIVOT_ROOT=pivot_root
+
+#After root is pivoted
+CHROOT=chroot
+
+KERNEL_VERSION=linux-2.6.16.20
+#export PATH=/bin:/sbin:/mounts/ROOT/bin:/mounts/ROOT/sbin
+
+# If debug is defined allow write access to otherwise read-only volumes
+if [ -n "$debug" ]
+then
+	ro=rw
+else
+	ro=ro
+fi
+
+main()
+{
+	display_info
+	mount_proc              #  First must mount proc so that we can use e2fs labels
+#	mount_sys
+	mount_system_media      #  Find and mount media containing system images
+	mount_images            #  Mount system images from system partition
+	pivot_roots             #  Pivot roots from initrd root to disk image root
+#	mount_tmpfs_for_dev	#
+	mount_system_image	#  Mount the OS image to the vfs
+	move_mounted_partitions #  Move already mounted partitions to virtual root
+	finish                  #  Exec to init
+}
+
+display_info()
+{
+	echo "Securizant Linux Cluster Edition POC (linuxrc)"
+	echo VFS Image: $VFS_IMAGE
+}
+
+mount_proc()
+{
+	doEcho "Mounting proc fs"
+	$MOUNT -n -s proc -t proc /mounts/PROC
+	if [ $? -eq 0 ]
+	then
+		PROC_MOUNTED=true
+	fi
+}
+
+mount_sys()
+{
+	doEcho "Mounting sys fs"
+	$MOUNT -n -t sysfs none /mounts/sys
+	if [ $? -eq 0 ]
+	then
+		SYSFS_MOUNTED=true
+	fi
+}
+
+mount_system_media()
+{
+	doEcho "Mounting system media"
+
+	if [ -n "$nfsmedia" ]
+	then
+		mount_system_from_nfs
+	else
+		mount_system_from_cdrom
+	
+		if [ "$SYSTEM_MEDIA" != "true" ]
+		then
+			mount_system_from_harddisk
+		fi
+	fi
+	
+	if [ "$IMAGES_FOUND" = "true" ]
+	then
+		if [ "$MEDIA" = "HARDDISK" ]
+		then
+			echo "System Media mounted from HARDDISK"
+		elif [ "$MEDIA" = "ISO" ]
+		then
+			echo "System Media mounted from ISO"
+		elif [ "$MEDIA" = "NFS" ]
+		then
+			echo "System Media mounted from NFS"
+		fi
+	else
+		$BASH
+	fi
+}
+
+mount_system_from_harddisk()
+{
+	doEcho "Checking hard disk for system media"
+	doEcho "$MOUNT -n -o $ro -L SYSTEM_MEDIA /mounts/SYSTEM_MEDIA"
+	$MOUNT -n -o "$ro" -L SYSTEM_MEDIA /mounts/SYSTEM_MEDIA
+			#> /dev/null > /dev/null 2>&1
+	if [ $? -eq 0 ]
+	then
+		areImagesIn /mounts/SYSTEM_MEDIA
+		if [ "$IMAGES_FOUND" = "true" ]
+		then
+			doEcho "SYSTEM_MEDIA contains disk images"
+			SYSTEM_MEDIA="true"
+			MEDIA="HARDDISK"
+		fi
+	else
+		doEcho "SYSTEM_MEDIA not mounted"
+		doEcho "$MOUNT -n -o rw -L LOCAL /mounts/LOCAL"
+		$MOUNT -n -o rw -L LOCAL /mounts/LOCAL
+		#> /dev/null > /dev/null 2>&1
+		if [ $? -eq 0 ]
+		then
+			areImagesIn /mounts/LOCAL
+			if [ "$IMAGES_FOUND" = "true" ]
+			then
+				doEcho "LOCAL contains disk images"
+				SYSTEM_MEDIA="true"
+				MEDIA="HARDDISK"
+			fi
+		fi
+	fi
+}
+
+mount_system_from_cdrom()
+{
+	doEcho "Checking cdroms system media"
+	for device in hda hdb hdc hdd
+	do
+		$MOUNT -n -s -t iso9660 /dev/$device /mounts/SYSTEM_MEDIA -o ro > /dev/null 2>&1
+		if [ $? -eq 0 ]
+		then
+			areImagesIn /mounts/SYSTEM_MEDIA
+			if [ "$IMAGES_FOUND" = true ]
+			then
+				SYSTEM_MEDIA=true
+				MEDIA="ISO"
+				break
+			else
+				umount /mounts/SYSTEM_MEDIA
+			fi
+		fi
+	done
+}
+
+mount_system_from_nfs()
+{
+	doEcho "Checking for system media on: ${nfsmedia}"
+#	load_NIC_device_modules
+#	load_nfs_modules
+#	initialize_network_interfaces
+#	initialize_network_interfaces_using_boot_parameters
+	mount_nfs
+}
+
+load_NIC_device_modules()
+{
+	$INSMOD /modules/$KERNEL_VERSION/net/mii.ko       # 2>/dev/null &&
+	$INSMOD /modules/$KERNEL_VERSION/net/3c59x.ko # 2>/dev/null
+}
+
+load_nfs_modules()
+{
+	# Load nfs modules
+	$INSMOD /modules/$KERNEL_VERSION/nfs/sunrpc.ko
+	$INSMOD /modules/$KERNEL_VERSION/nfs/lockd.ko
+	$INSMOD /modules/$KERNEL_VERSION/nfs/nfs.ko
+}
+
+initialize_network_interfaces()
+{
+	if [ ! -x $IFCONFIG ]
+	then
+		echo "Cound not find ifconfig"
+	fi
+	
+	if [ ! -x $PUMP ]
+	then
+		echo "Cound not find pump"
+	fi
+	
+	for i in 0 1 2 3
+	do
+		$IFCONFIG eth$i up >/dev/null 2>&1 || continue
+		if [ $? -eq 0 ]
+		then
+			$PUMP -i eth$i
+		fi
+	done
+	
+	$IFCONFIG lo 127.0.0.1 up
+	$IFCONFIG
+}
+
+initialize_network_interfaces_using_boot_parameters()
+{
+	$IFCONFIG eth0 $ip up
+	$IFCONFIG lo 127.0.0.1 up
+	$IFCONFIG
+}
+
+mount_nfs()
+{
+#	/static/mount -t nfs -o ro,rsize=8192,wsize=8192,hard,intr
+	$MOUNT -n -t nfs -o "$ro",hard,nolock "${nfsmedia}" /mounts/SYSTEM_MEDIA
+	if [ $? -eq 0 ]
+	then
+		areImagesIn /mounts/SYSTEM_MEDIA
+		if [ "$IMAGES_FOUND" = "true" ]
+		then
+			SYSTEM_MEDIA="true"
+			MEDIA="NFS"
+		fi
+	fi
+}
+
+mount_images()
+{
+	doEcho "Attempting to mount disk images from media: $MEDIA"
+	#
+	#  If /mounts/SYSTEM was successfully mounted then use images on it, else
+	#  see if there are images on /mounts/LOCAL
+	#
+	if [ -d /mounts/SYSTEM_MEDIA/disk_images ]
+	then
+		mount -n -s -o loop,"$ro" \
+			/mounts/SYSTEM_MEDIA/disk_images/$VFS_IMAGE \
+			/mounts/ROOT
+		if [ $? -ne 0 ]
+		then
+			doEcho "Could not mount vfs!!"
+			$BASH
+		fi
+	else
+		doEcho "Could not find file system images"
+		$BASH
+	fi
+}
+
+pivot_roots()
+{
+	doEcho "Attempting to pivot roots"
+	#
+	#  Pivot root
+	#
+	cd /mounts/ROOT
+	$PIVOT_ROOT . ./mnt
+	cd /
+	export PATH=/mnt/bin
+}
+
+mount_tmpfs_for_dev()
+{
+	doEcho "Attempting to create dev"
+	${MOUNT} -t tmpfs none /dev
+	if [ $? -eq 0 ]
+	then
+		#echo "Copying devices to /dev"
+		cp -R /mounts/INITRD/dev/* /dev
+	fi
+}
+
+mount_system_image()
+{
+	doEcho "Attempt to mount the system image"
+	if [ -f /mnt/mounts/SYSTEM_MEDIA/disk_images/$SYSTEM_IMAGE ]
+	then
+		mount -n /mnt/mounts/SYSTEM_MEDIA/disk_images/$SYSTEM_IMAGE \
+			$SYSTEM_MOUNT -o loop=/mnt/dev/loop1,"$ro"
+	fi
+}
+
+move_mounted_partitions()
+{
+	doEcho "Attempting to move mounted partitions"
+	#
+	#  Move mounted partitions
+	#
+
+	if [ "$PROC_MOUNTED" = "true" ]
+	then
+		$MOUNT -n --move /mnt/mounts/PROC \
+			$SYSTEM_MOUNT/mounts/PROCESSES
+	fi
+
+	if [ "$SYSTEM_MEDIA" = "true" ]
+	then
+		$MOUNT -n --move /mnt/mounts/SYSTEM_MEDIA \
+			$SYSTEM_MOUNT/mounts/SYSTEM_MEDIA
+	fi
+}
+
+finish()
+{
+	echo "Leaving linuxrc"
+	exec $CHROOT . /sbin/init </mnt/dev/console >/mnt/dev/console 2>&1
+}
+
+#
+#  Common functions called
+#
+
+doEcho()
+{
+	if [ -n "$verbose" ]
+	then
+		echo $1
+	fi
+
+	if [ -n "$step" ]
+	then
+		$BASH
+	fi
+}
+
+areImagesIn()
+{
+	#
+	#	eg. /mounts/NFS/disk_images/*.img
+	#
+
+	OSDIR=$1/disk_images
+	
+	for img in $OSDIR/*.img
+	do
+		IMAGES_FOUND=true
+	done
+}
+
+main $@
+
