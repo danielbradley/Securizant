@@ -1,0 +1,453 @@
+#!/system/software/bin/bash
+#
+#  /system/startup/modules/startup.script: System Initialization Script
+#
+#  Written by Daniel Bradley <daniel.bradley@securizant.org>
+#  Last modified: 7 November 2009
+
+#
+#  Constants
+#
+
+SYSTEM=/${SYSTEM_MOUNT}		# exported from initrc
+SYSDATA=/local/data/_system
+
+SYSCONF=/local/settings/system
+HOSTNAME_FILE=${SYSCONF}/meta/hostname
+HARDWARE_SCRIPT=${SYSTEM}/startup/modules/hardware.script
+NETWORK_SCRIPT=${SYSTEM}/startup/modules/network.script
+
+#
+#  Programs
+#
+
+BASH=bash
+CAT=cat
+CUT=cut
+FSCK=fsck
+HOSTNAME=hostname
+MOUNT=mount
+UMOUNT=umount
+
+#
+#  Default Path
+#
+export PATH=${SYSTEM}/software/bin:${SYSTEM}/software/sbin
+
+main()
+{
+#	echo "Entering startup.script"
+
+#	determine_boot_media
+
+#	enable_swapping
+
+#	check_system_partitions
+
+	mount_sys
+	mount_dev
+
+#	mount_var
+
+	mount_tmpfs
+	mount_local_partition
+	mount_feature_partition development
+	mount_feature_partition desktop
+	mount_feature_partition source
+	run_ldconfig
+#	mount_var_partition
+#	mount_usr_partition
+
+	setup_identity
+	enable_hardware
+
+#	start_update
+#	create_utmp
+# load_kernel_modules
+# initialize_pcmcia
+# initialize_serial
+# perpetuate_random_entropy
+
+	enable_networking
+
+	discard_initrd
+}
+
+determine_boot_media()
+{
+	doEcho "Determine boot media"
+	local ISO_GREP=`mount | grep ISO`
+	local SYSTEM_GREP=`mount | grep SYSTEM`
+
+	if [ "$ISO_GREP" != "" ]
+	then
+		BOOT_MEDIA=iso
+	elif [ "$SYSTEM_GREP" != "" ]
+	then
+		BOOT_MEDIA=system
+	else
+		BOOT_MEDIA=unknown
+	fi
+}
+
+#
+#  Enable swapping
+#
+enable_swapping()
+{
+	echo "Enabling swapping (not)"
+}
+
+check_system_partitions()
+{
+	doEcho "Check partitions"
+	echo "Checking system partitions"
+	$FSCK -C -a LABEL=LOCAL 
+	$FSCK -C -a LABEL=VAR
+	$FSCK -C -a LABEL=SYSTEM
+}
+
+mount_sys()
+{
+	doEcho "Mounting sysfs"
+	${MOUNT} -n -t sysfs none /system/mounts/SYS
+	if [ $? -ne 0 ]
+	then
+		chown system:users /system/mounts/SYS
+		${MOUNT} -n -t sysfs none /system/mounts/SYS
+		${MOUNT} -n -t usbfs none ${SYSTEM}/processes/bus/usb
+	fi
+}
+
+mount_dev()
+{
+	doEcho "Mounting tmpfs for /dev"
+	${MOUNT} -n tmpfs -t tmpfs ${SYSTEM}/devices
+	chown system:users ${SYSTEM}/devices
+
+	if [ "$udev" == "true" ]
+	then
+		${SYSTEM}/software/commands/system/udev-056/sbin/udevstart
+		mkdir -p ${SYSTEM}/devices/pts
+		mount -n -t devpts -o gid=4,mode=620 devpts ${SYSTEM}/devices/pts
+		chown root:users ${SYSTEM}/devices/{ptmx,pts}
+
+		if [ -f ${SYSTEM}/devices/dsp ]
+		then
+			chown root:users ${SYSTEM}/devices/dsp
+		fi
+
+		chown root:users ${SYSTEM}/devices/null
+		chown root:users ${SYSTEM}/devices/tty
+		chown root:users ${SYSTEM}/devices/random
+		chown root:users ${SYSTEM}/devices/urandom
+		chown root:users ${SYSTEM}/devices/zero
+	else
+		tar -C ${SYSTEM}/devices -jpxf ${SYSTEM}/startup/devices/devices.tar.bz2
+		mkdir -p ${SYSTEM}/devices/pts
+		mount -n -t devpts -o gid=4,mode=620 devpts ${SYSTEM}/devices/pts
+	fi
+}
+
+mount_var()
+{
+	local VAR=${SYSTEM}/mounts/VAR
+	doEcho "Mount tmpfs for ${VAR}"
+	${MOUNT} -n -s tmpfs -t tmpfs ${VAR}
+
+	mkdir -p ${VAR}/{run,log}
+	touch ${VAR}/run/utmp /var/log/{btmp,lastlog,wtmp}
+	chgrp -v utmp ${VAR}/run/utmp /var/log/lastlog
+	chmod -v 664 ${VAR}/run/utmp /var/log/lastlog
+}
+
+#
+#  Mount a tmpfs to /system/mounts/TEMP
+#
+#  When this occurs the default settings directory will no
+#  long be visible: /etc --> /local/settings -->
+#  /system/mounts/TEMP/settings --> /system/default/settings
+#
+#  However, next the local partition will either be mounted, or
+#  if no local partition the default settings will be copied into
+#  /system/mounts/TEMP/settings.
+#
+mount_tmpfs()
+{
+	doEcho "Mount tmpfs for temp directory"
+	${MOUNT} -n -t tmpfs none ${SYSTEM}/mounts/TEMP
+	chmod 1770 ${SYSTEM}/mounts/TEMP
+
+	cp -Rp /system/default/data         ${SYSTEM}/mounts/TEMP
+	cp -Rp /system/default/settings     ${SYSTEM}/mounts/TEMP
+	cp -Rp /system/default/shared       ${SYSTEM}/mounts/TEMP
+	cp -Rp /system/default/software     ${SYSTEM}/mounts/TEMP
+	cp -Rp /system/default/users        ${SYSTEM}/mounts/TEMP
+	
+	mkdir ${SYSTEM}/mounts/TEMP/log
+
+	chmod 1777 ${SYSTEM}/mounts/TEMP/users
+	chown system:users ${SYSTEM}/mounts/TEMP
+	chown system:users ${SYSTEM}/mounts/TEMP/users
+}
+
+
+#
+#  Mount local partition
+#
+mount_local_partition()
+{
+	doEcho "Mounting /local partition"
+
+	if [ -n "$nfslocal" ]
+	then
+		${MOUNT} -n -t nfs -o rsize=8192,hard,nolock "${nfslocal}" \
+			/local
+		if [ $? -eq 0 ]
+		then
+			LOCAL_MOUNTED=TRUE
+		fi
+	elif [ -n "$local" ]
+	then
+		${MOUNT} -s -o rw $local /local
+		if [ $? -eq 0 ]
+		then
+			LOCAL_MOUNTED=TRUE
+		fi
+	else
+		${MOUNT} -s -o rw -L LOCAL /local
+		if [ $? -eq 0 ]
+		then
+			LOCAL_MOUNTED=TRUE
+		fi
+	fi
+
+	if [ "$LOCAL_MOUNTED" != "TRUE" ]
+	then
+		cp -Rp ${SYSTEM}/default/settings /system/mounts/TEMP
+		cp -Rp ${SYSTEM}/default/data     /system/mounts/TEMP
+	fi
+}
+
+#
+#  Mount x11 partition
+#
+mount_x11_partition()
+{
+	doEcho "Mounting ${SYSTEM}/X11R6 partition"
+
+	if [ -f ${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/desktop.e2 ]
+	then
+		echo "${MOUNT} -n -o loop \
+		${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/desktop.e2 ${SYSTEM}/mounts/X11"
+		${MOUNT} -n -o loop \
+			${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/desktop.e2 ${SYSTEM}/mounts/X11
+	elif [ -f ${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/desktop.img ]
+	then
+		echo "${MOUNT} -n -t squashfs -o loop \
+		${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/desktop.img ${SYSTEM}/mounts/X11"
+		${MOUNT} -n -t squashfs -o loop \
+			${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/desktop.img ${SYSTEM}/mounts/X11
+	fi
+}
+
+#
+#  Mount dev partition
+#
+mount_feature_partition()
+{
+	local Feature=$1
+	doEcho "Mounting ${SYSTEM}/${Feature} partition"
+	
+	if [ -f ${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/${Feature}.e2 ]
+	then
+		echo "${MOUNT} -n -o loop \
+		${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/${Feature}.e2 ${SYSTEM}/features/${Feature}"
+		${MOUNT} -n -o loop \
+			${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/${Feature}.e2 ${SYSTEM}/features/${Feature}
+	elif [ -f ${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/${Feature}.img ]
+	then
+		echo "${MOUNT} -n -t squashfs -o loop \
+		${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/${Feature}.img ${SYSTEM}/features/${Feature}"
+		${MOUNT} -n -t squashfs -o loop \
+			${SYSTEM}/mounts/SYSTEM_MEDIA/$OSDIR/${Feature}.img ${SYSTEM}/features/${Feature}
+	fi
+}
+
+#
+#  Must now run ldconfig to make sure that the
+#  ld.so.cache is up to date on local/tmp.
+#  Extremely important (and frustrating) if not
+#  synced on first boot
+#
+run_ldconfig()
+{
+	doEcho "Running ldconfig"
+	ldconfig
+}
+
+#
+#  Mount /var partition
+#
+mount_var_partition()
+{
+	doEcho "Mounting /var"
+	${MOUNT} -n -s -o rw -L VAR ${SYSTEM}/mounts/VAR
+	if [ $? -eq 0 ]
+	then
+		VAR_MOUNTED=TRUE
+	fi
+
+	if [ "$VAR_MOUNTED" != "TRUE" ]
+	then
+		${MOUNT} -n -s ${SYSDATA}/var.e2 /system/mounts/VAR -o loop,rw
+		if [ $? -eq 0 ]
+		then
+			VAR_MOUNTED=TRUE
+		fi
+	fi
+
+	if [ "$VAR_MOUNTED" != "TRUE" ]
+	then
+		${MOUNT} -n -s tmpfs -t tmpfs ${SYSTEM}/mounts/VAR
+		${MOUNT} -n -s ${SYSTEM}/mounts/SYSTEM_MEDIA/disk_images/var.e2 /mnt -o loop,ro
+		cp -Rp /mnt/* /mounts/VAR
+		umount -n -d /mnt
+		VAR_MOUNTED=TRUE
+	fi
+}
+
+
+#
+#  Enable hardware, e.g., serial, parallel, NICs.
+#
+enable_hardware()
+{
+	doEcho "Enabling hardware"
+
+	if [ -x $HARDWARE_SCRIPT ]
+	then
+		${HARDWARE_SCRIPT} $nodename
+	fi
+}
+
+
+#
+#  Set the hostname
+#
+setup_identity()
+{
+	doEcho "Setting hostname"
+
+	if [ -n "$nodename" ]
+	then
+		${HOSTNAME} $nodename
+	elif [ -f ${HOSTNAME_FILE} ]
+	then
+		${HOSTNAME} `${CAT} ${HOSTNAME_FILE} | ${CUT} -f1 -d .`
+	fi
+}
+
+#
+#  Start update
+#
+start_update()
+{
+	echo "Starting update (not)"
+}
+
+
+#
+#  Create /var/run/utmp (don't know why!?)
+#
+create_utmp()
+{
+	doEcho "Creating utmp"
+
+	echo cat /dev/null > /var/run/utmp
+}
+
+
+#
+#  Load Kernel modules
+#
+load_kernel_modules()
+{
+	echo "Loading kernel modules (not)"
+}
+
+
+#
+#  Initialize PCMCIA devices
+#
+initialize_pcmcia()
+{
+	echo "Initializing PCMCIA devices (not)"
+}
+
+
+#
+#  Initialize serial ports
+#
+initialize_serial()
+{
+	echo "Initializing serial ports (not)"
+}
+
+
+#
+#  Perpetuate random entropy
+#
+perpetuate_random_entropy()
+{
+	echo "Perpetuating random entropy (not)"
+}
+
+#
+#  Enable networking
+#
+enable_networking()
+{
+	doEcho "Enabling networking"
+	if [ -x ${NETWORK_SCRIPT} ]
+	then
+		${NETWORK_SCRIPT} $nodename
+	fi
+}
+
+discard_initrd()
+{
+	echo "Discarding initrd"
+	${UMOUNT} /mnt
+	if [ $? -eq 0 ]
+	then
+		rmdir /mnt
+	fi
+}
+
+#
+#  Run bash
+#
+run_bash()
+{
+	PATH=${DEFAULT_PATH} ${BASH}
+}
+
+doEcho()
+{
+	if [ -n "$verbose" ]
+	then
+		echo $1
+	fi
+
+	if [ -n "$step" ]
+	then
+		$BASH
+	fi
+}
+
+################################################################
+##   Main section
+##
+
+main $@

@@ -1,0 +1,99 @@
+#!/system/software/bin/bash
+#
+#  /system/scripts/multiuser.script: User mode script
+#
+#  Written by Daniel Bradley <daniel.bradley@securizant.org>
+#  Last modified: 02 July 2006
+
+#  When this script is run the startup.script has run which
+#  has set the hostname, initialized hardware and setup
+#  networking.
+
+#  This script now starts system services, and recreates the
+#  user environment by mounting user partitions etc.
+
+SYSTEM=/system
+PATH=$SYSTEM/software/bin:$SYSTEM/software/sbin
+SYSCONFDIR=/etc
+if [ -n "$nodename" ]
+then
+	SYSCONFDIR=/etc/NODES/$nodename
+fi
+
+SYSTEM_SERVICES_SCRIPT=$SYSTEM/startup/modules/services.script
+SYSTEM_V_SCRIPT=$SYSTEM/startup/modules/systemV.script
+
+main()
+{
+	doEcho "Running multiuser.script"
+#	set_screen_blank 15
+	mount_user_media
+##	start_system_services
+##	run_system_v_init_scripts
+	run_startup
+}
+
+#
+#  Blank the screen after n minutes
+#
+set_screen_blank()
+{
+	doEcho "Blanking term"
+	setterm -blank $1
+}
+
+mount_user_media()
+{
+	doEcho "Mounting user media"
+	if [ -z "$nfslocal" ]
+	then
+#		fsck -C -A -R -p -n
+		mount -a
+	fi
+}
+
+start_system_services()
+{
+	doEcho "Services not yet implemented"
+#	$SYSTEM/startup/multiuser/services.script startup
+}
+
+run_system_v_init_scripts()
+{
+	doEcho "Starting System V Style Services"
+	if [ -x $SYSTEM/multiuser/systemV.script ]
+	then
+		$SYSTEM/multiuser/systemV.script 
+	fi
+}
+
+run_startup()
+{
+	doEcho "Running startup scripts"
+	if [ -d $SYSCONFDIR/SYSTEM/STARTUP ]
+	then
+		for EXE in $SYSCONFDIR/SYSTEM/STARTUP/*
+		do
+			doEcho "Running: $EXE"
+			if [ -x $EXE ]
+			then
+				$EXE start > /dev/null &2>1
+			fi
+		done
+	fi
+}
+
+doEcho()
+{
+	if [ -n "$verbose" ]
+	then
+		echo $1
+	fi
+
+	if [ -n "$step" ]
+	then
+		$BASH
+	fi
+}
+
+main

@@ -1,0 +1,52 @@
+#!/tools/bin/bash
+#
+#       Copyright (c) 2004-2006 Daniel Robert Bradley. All rights reserved.
+#
+
+main()
+{
+#	echo "running local.script"
+	if [ "$1" == "prepare" ]
+	then
+		cd /local
+		umask 027 &&
+	
+		create_files &&
+		change_file_ownerships
+	fi
+}
+
+create_files()
+{
+	echo "build.script: creating files"
+	touch /local/sysdata/run/utmp
+	touch /local/sysdata/log/{btmp,lastlog,wtmp}
+}
+
+change_file_ownerships()
+{
+	echo "build.script: changing file ownerships"
+
+	chown -R system:users      /local/data
+	chown -R system:users      /local/media
+	chown -R system:users      /local/settings
+	chown -R system:users      /local/software
+	chown -R system:users      /local/users
+
+	chown -R application:users /local/software/applications
+	chown -R driver:users      /local/software/drivers
+	chown -R library:users     /local/software/libraries
+	chown -R runtime:users     /local/software/runtimes
+	chown -R service:users     /local/software/services
+	chown -R system:users      /local/software/images
+
+	chown -R system:users      /local/sysdata/lib
+
+	chgrp utmp /local/sysdata/run/utmp
+	chgrp utmp /local/sysdata/log/lastlog
+
+	chmod 644 /local/sysdata/run/utmp /local/sysdata/log/lastlog
+}
+
+main $@
+

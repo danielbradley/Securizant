@@ -1,0 +1,42 @@
+
+# Default runlevel. (Do not set to 0 or 6)
+id:5:initdefault:
+
+# System initialization (runs when system boots).
+si:S:sysinit:/system/startup/modules/startup.script
+
+# Script to run when going single user (runlevel 1).
+su:1S:wait:/etc/rc.d/rc.K
+
+# Script to run when going multi user.
+rc:2345:wait:/system/startup/modules/multiuser.script
+
+# What to do at the "Three Finger Salute".
+ca::ctrlaltdel:/system/software/sbin/shutdown -t5 -r now
+
+# Runlevel 0 halts the system.
+l0:0:wait:/system/startup/modules/halt.script
+
+# Runlevel 6 reboots the system.
+l6:6:wait:/system/startup/modules/reboot.script
+
+# These are the standard console login getties in multiuser mode:
+c1:1235:respawn:/system/software/sbin/agetty  38400 tty1 linux -l /system/software/bin/login
+c2:1235:respawn:/system/software/sbin/agetty  38400 tty2 linux -l /system/software/bin/login
+c3:1235:respawn:/system/software/sbin/agetty  38400 tty3 linux -l /system/software/bin/login
+c4:1235:respawn:/system/software/sbin/agetty  38400 tty4 linux -l /system/software/bin/login
+c5:1235:respawn:/system/software/sbin/agetty  38400 tty5 linux -l /system/software/bin/login
+c6:12345:respawn:/system/software/sbin/agetty 38400 tty6 linux -l /system/software/bin/login
+
+# Runlevel 4 used to be for an X window only system, until we discovered
+# that it throws init into a loop that keeps your load avg at least 1 all
+# the time. Thus, there is now one getty opened on tty6. Hopefully no one
+# will notice. ;^)
+# It might not be bad to have one text console anyway, in case something
+# happens to X.
+x1:4:wait:/etc/rc.d/rc.4
+
+x:5:respawn:/system/startup/modules/desktop.script
+
+# End of /etc/inittab
+

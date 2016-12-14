@@ -1,0 +1,7 @@
+shell/bash
+system/sysvinit
+utils/activate
+utils/coreutils
+utils/grub
+utils/module-init-tools
+utils/util-linux

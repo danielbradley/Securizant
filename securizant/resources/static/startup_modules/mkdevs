@@ -1,0 +1,61 @@
+#!/bin/bash
+
+if [ -n "$1" ]
+then
+	DEV=$1
+else
+	DEV=/dev
+fi
+
+if [ -n "$2" ]
+then
+	PROC=$2
+else
+	PROC=/proc
+fi
+
+mknod -m 622 $DEV/console c 5 1
+mknod -m 666 $DEV/null c 1 3
+mknod -m 666 $DEV/zero c 1 5
+mknod -m 666 $DEV/ptmx c 5 2
+mknod -m 666 $DEV/tty c 5 0
+mknod -m 444 $DEV/random c 1 8
+mknod -m 444 $DEV/urandom c 1 9
+
+mknod -m 640 $DEV/loop0   b 7 0
+mknod -m 640 $DEV/loop1   b 7 1
+mknod -m 640 $DEV/loop2   b 7 2
+mknod -m 640 $DEV/loop3   b 7 3
+mknod -m 640 $DEV/loop4   b 7 4
+mknod -m 640 $DEV/loop5   b 7 5
+mknod -m 640 $DEV/loop6   b 7 6
+mknod -m 640 $DEV/loop7   b 7 7
+mknod -m 640 $DEV/loop8   b 7 8
+mknod -m 640 $DEV/loop9   b 7 9
+
+mknod -m 600 $DEV/tty0    c 4 1
+mknod -m 600 $DEV/tty1    c 4 2
+mknod -m 600 $DEV/tty2    c 4 2
+mknod -m 600 $DEV/tty3    c 4 3
+mknod -m 600 $DEV/tty4    c 4 4
+mknod -m 600 $DEV/tty5    c 4 5
+mknod -m 600 $DEV/tty6    c 4 6
+mknod -m 600 $DEV/tty7    c 4 7
+mknod -m 600 $DEV/tty8    c 4 8
+mknod -m 600 $DEV/tty9    c 4 9
+
+chown 0:5 $DEV/{console,ptmx,tty}
+chown 0:5 $DEV/tty*
+
+ln -s $PROC/self/fd $DEV/fd
+ln -s $PROC/self/fd/0 $DEV/stdin
+ln -s $PROC/self/fd/1 $DEV/stdout
+ln -s $PROC/self/fd/2 $DEV/stderr
+ln -s $PROC/kcore $DEV/core
+
+mkdir $DEV/pts
+mkdir $DEV/shm
+
+mount -nt devpts -o gid=4,mode=620 none $DEV/pts
+mount -nt tmpfs none $DEV/shm
+
