@@ -53,6 +53,9 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
+			sed -i 's|"/proc|"/system/processes|g'      *.c
+			sed -i 's|"/proc|"/system/processes|g' proc/*.c
+			sed -i 's|"/proc|"/system/processes|g'   ps/*.c
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
