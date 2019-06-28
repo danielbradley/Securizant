@@ -1,0 +1,328 @@
+#!/tools/bin/bash
+#
+#       Copyright (c) 2004-2006 Daniel Robert Bradley. All rights reserved.
+#
+
+main()
+{
+#	echo "running system.script"
+
+	if [ "$1" == "prepare" ]
+	then
+		cd /system
+		umask 027 &&
+
+		change_file_ownerships &&
+		create_dev_files &&
+		clear_cvs_directories
+	elif [ "$1" == "finish" ]
+	then
+		change_ownership_of_files
+		finish_utils
+		redirect_usr_bin
+		# remove_lost_and_found #Interfers with prepare
+		remove_self
+	fi
+}
+
+change_file_ownerships()
+{
+	echo "system.script: changing file ownerships"
+
+	chown system:users         /system/accounts
+	chown -R application:users /system/accounts/application
+	chown -R command:users     /system/accounts/commands
+	chown -R guest:users       /system/accounts/guest
+	chown -R library:users     /system/accounts/library
+	chown -R root:root         /system/accounts/root
+	chown -R runtime:users     /system/accounts/runtime
+	chown -R service:users     /system/accounts/service
+	chown -R software:users    /system/accounts/software
+	chown -R system:users      /system/accounts/system
+
+	chown system:users	/system/devices
+	chown system:users	/system/processes
+
+	chown system:system	/system/default/settings/private
+
+	chown system:users	/system/default
+	chown system:users	/system/default/settings
+	chown system:users	/system/default/settings/desktop
+	chown system:users	/system/default/settings/fonts
+	chown system:users	/system/default/settings/hardware
+	chown system:users	/system/default/settings/hardware/network_adapters
+	chown system:users	/system/default/settings/hardware/network_adapters/eth0
+	chown system:users	/system/default/settings/media
+	chown system:users	/system/default/settings/media/meta
+	chown system:users	/system/default/settings/networks
+	chown system:users	/system/default/settings/networks/interfaces
+	chown system:users	/system/default/settings/networks/interfaces/eth0.iface
+	chown system:users	/system/default/settings/networks/meta
+	chown system:users	/system/default/settings/services
+	chown system:users	/system/default/settings/software
+	chown system:users	/system/default/settings/system
+	chown system:users	/system/default/settings/system/meta
+	chown system:users	/system/default/settings/users
+	chown system:users	/system/default/settings/users/*
+	chown system:users	/system/default/settings/users/meta
+	chown system:users	/system/default/settings/users/meta/*
+	chown system:users	/system/default/settings/lsb
+	chown system:users	/system/default/software
+	chown system:users	/system/default/data
+	chown system:users	/system/default/data/_system
+	chown system:users	/system/default/data/_system/lib
+	chown system:users	/system/default/data/_system/log
+	chown system:users	/system/default/data/_system/run
+
+	chown system:users	/system/features
+
+	chown system:users	/system/mounts
+	chown system:users	/system/mounts/{SYSTEM_MEDIA,TEMP,VAR}
+	chown system:users	/system/software
+	chown system:users	/system/software/applications
+	chown system:users	/system/software/commands
+	chown system:users	/system/software/commands/development
+	chown system:users	/system/software/drivers
+	chown system:users	/system/software/kernels
+	chown system:users	/system/software/libraries
+	chown system:users	/system/software/runtimes
+	chown system:users	/system/software/services
+	chown system:users	/system/software/{bin,doc,include,info}
+	chown system:users	/system/software/{lib,man,sbin,share}
+	chown system:users	/system/software/lib/lsb
+	chown system:users	/system/software/lib/lsb/init-functions
+	chown system:users	/system/software/man/man?
+	chown system:users	/system/software/source
+	chown system:users	/system/software/source/linux
+
+	chown system:users	/system/software/X11R6
+	chown system:users	/system/software/X11R6/software
+
+	chown system:users	/system/startup
+
+	chown system:users	/usr/bin
+}
+
+create_dev_files()
+{
+	local DEV=/system/devices
+	local PROC=/system/processes
+
+	if [ ! -f $DEV/TMPFS ]
+	then
+		if [ ! -f $DEV/DEVICES ]
+		then
+			mknod -m 600 $DEV/console c 5 1
+			mknod -m 666 $DEV/null c 1 3
+			touch $DEV/DEVICES
+		fi
+
+		mount -nt tmpfs none $DEV
+		touch $DEV/TMPFS
+		chown system:users $DEV
+	fi
+
+	if [ -f $DEV/TMPFS ]
+	then
+		if [ ! -f $DEV/DEVICES ]
+		then
+			mknod -m 666 $DEV/null    c 1 3
+			mknod -m 666 $DEV/zero    c 1 5
+			mknod -m 444 $DEV/random  c 1 8
+			mknod -m 444 $DEV/urandom c 1 9
+			mknod -m 666 $DEV/tty     c 5 0
+			mknod -m 666 $DEV/ptmx    c 5 2
+			mknod -m 622 $DEV/console c 5 1
+
+			mknod -m 622 $DEV/hda     b 3 0
+			mknod -m 622 $DEV/hda1    b 3 1
+			mknod -m 622 $DEV/hda2    b 3 2
+			mknod -m 622 $DEV/hda3    b 3 3
+			mknod -m 622 $DEV/hda4    b 3 4
+			mknod -m 622 $DEV/hda5    b 3 5
+			mknod -m 622 $DEV/hda6    b 3 6
+
+			mknod -m 622 $DEV/hdb     b 3 64
+			mknod -m 622 $DEV/hdb1    b 3 65
+			mknod -m 622 $DEV/hdb2    b 3 66
+			mknod -m 622 $DEV/hdb3    b 3 67
+			mknod -m 622 $DEV/hdb4    b 3 68
+			mknod -m 622 $DEV/hdb5    b 3 69
+			mknod -m 622 $DEV/hdb6    b 3 70
+
+			mknod -m 622 $DEV/hdc     b 22 0
+			mknod -m 622 $DEV/hdc1    b 22 1
+			mknod -m 622 $DEV/hdc2    b 22 2
+			mknod -m 622 $DEV/hdc3    b 22 3
+			mknod -m 622 $DEV/hdc4    b 22 4
+			mknod -m 622 $DEV/hdc5    b 22 5
+			mknod -m 622 $DEV/hdc6    b 22 6
+
+			mknod -m 622 $DEV/hdd     b 22 64
+			mknod -m 622 $DEV/hdd1    b 22 65
+			mknod -m 622 $DEV/hdd2    b 22 66
+			mknod -m 622 $DEV/hdd3    b 22 67
+			mknod -m 622 $DEV/hdd4    b 22 68
+			mknod -m 622 $DEV/hdd5    b 22 69
+			mknod -m 622 $DEV/hdd6    b 22 70
+
+			chown root:tty $DEV/{console,ptmx,tty}
+
+			ln -s $PROC/self/fd $DEV/fd
+			ln -s $PROC/self/fd/0 $DEV/stdin
+			ln -s $PROC/self/fd/1 $DEV/stdout
+			ln -s $PROC/self/fd/2 $DEV/stderr
+			ln -s $PROC/kcore $DEV/core
+
+			mkdir $DEV/pts
+			mkdir $DEV/shm
+
+			mount -nt devpts -o gid=4,mode=620 none $DEV/pts
+			mount -nt tmpfs none $DEV/shm
+
+			touch $DEV/DEVICES
+		fi
+	fi
+}
+
+alternate_create_dev()
+{
+	if [ ! -e /usr/devices/hda ]
+	then
+		echo "Creating dev files"
+		mknod /usr/devices/hda  b 3 0
+		mknod /usr/devices/hda1 b 3 1
+		mknod /usr/devices/hda2 b 3 2
+		mknod /usr/devices/hda3 b 3 3
+		mknod /usr/devices/hda4 b 3 4
+		mknod /usr/devices/hda5 b 3 5
+		mknod /usr/devices/hda6 b 3 6
+		mknod /usr/devices/hda7 b 3 7
+		mknod /usr/devices/hda8 b 3 8
+		mknod /usr/devices/hda9 b 3 9
+
+		mknod /usr/devices/hdb  b 3 64
+		mknod /usr/devices/hdb1 b 3 65
+		mknod /usr/devices/hdb2 b 3 66
+		mknod /usr/devices/hdb3 b 3 67
+		mknod /usr/devices/hdb4 b 3 68
+		mknod /usr/devices/hdb5 b 3 69
+		mknod /usr/devices/hdb6 b 3 70
+		mknod /usr/devices/hdb7 b 3 71
+		mknod /usr/devices/hdb8 b 3 72
+		mknod /usr/devices/hdb9 b 3 73
+
+		mknod /usr/devices/hdc  b 22 0
+		mknod /usr/devices/hdc1 b 22 1
+		mknod /usr/devices/hdc2 b 22 2
+		mknod /usr/devices/hdc3 b 22 3
+		mknod /usr/devices/hdc4 b 22 4
+		mknod /usr/devices/hdc5 b 22 5
+		mknod /usr/devices/hdc6 b 22 6
+		mknod /usr/devices/hdc7 b 22 7
+		mknod /usr/devices/hdc8 b 22 8
+		mknod /usr/devices/hdc9 b 22 9
+
+		mknod /usr/devices/hdd  b 22 64
+		mknod /usr/devices/hdd1 b 22 65
+		mknod /usr/devices/hdd2 b 22 66
+		mknod /usr/devices/hdd3 b 22 67
+		mknod /usr/devices/hdd4 b 22 68
+		mknod /usr/devices/hdd5 b 22 69
+		mknod /usr/devices/hdd6 b 22 70
+		mknod /usr/devices/hdd7 b 22 71
+		mknod /usr/devices/hdd8 b 22 72
+		mknod /usr/devices/hdd9 b 22 73
+
+		mknod /usr/devices/loop0 b 7 0
+		mknod /usr/devices/loop1 b 7 1
+		mknod /usr/devices/loop2 b 7 2
+		mknod /usr/devices/loop3 b 7 3
+		mknod /usr/devices/loop4 b 7 4
+		mknod /usr/devices/loop5 b 7 5
+		mknod /usr/devices/loop6 b 7 6
+		mknod /usr/devices/loop7 b 7 7
+
+		mknod /usr/devices/random c 1 8
+		mknod /usr/devices/zero   c 1 5
+		mknod /usr/devices/null   c 1 3
+
+		chmod 666 /usr/devices/random
+		chmod 666 /usr/devices/zero
+		chmod 666 /usr/devices/null
+	fi
+}
+
+change_ownership_of_files()
+{
+	chown -R system:users  /system/default/settings
+	chown    system:system /system/default/settings/private
+}
+
+clear_cvs_directories()
+{
+	rm -rf `find /system/default  -name "CVS"`
+	rm -rf `find /system/software -name "CVS"`
+	rm -rf `find /system/startup  -name "CVS"`
+}
+
+finish_utils()
+{
+	MOUNTEXE=`find /system/software/commands -name mount`
+	UMOUNTEXE=`find /system/software/commands -name umount`
+
+	PING=`find /system/software/commands -name ping`
+	
+	if [ -n "$MOUNTEXE" ]  
+	then
+		chown root:users $MOUNTEXE &&
+		chmod 4750       $MOUNTEXE 
+	fi
+
+	if [ -n "$UMOUNTEXE" ]
+	then
+		chown root:users $UMOUNTEXE &&
+		chmod 4750       $UMOUNTEXE
+	fi
+
+	if [ -n "${PING}" ]
+	then
+		chown root:users ${PING} &&
+		chmod 4750	 ${PING}
+	fi
+
+	if [ -f /system/software/libraries/system/shadow-4.0.9/bin/su ]
+	then
+		local BINDIR=/system/software/libraries/system/shadow-4.0.9/bin
+		for EXE in chage chfn chsh expiry gpasswd newgrp su passwd
+		do
+			chown root:users $BINDIR/$EXE
+			chmod 4750       $BINDIR/$EXE
+		done
+	fi
+
+	chmod -R o-rwx /system/default
+	chmod +x /system/default/settings/users/meta/create_temporary_home.sh
+}
+
+redirect_usr_bin()
+{
+ 	cd /
+	if [ -d /usr/bin ]
+	then
+		rm -rf /usr
+		ln -s system/software usr
+	fi
+}
+
+remove_lost_and_found()
+{
+	rm -rf /system/lost+found
+}
+
+remove_self()
+{
+	rm /system/system.script
+}
+
+main $@

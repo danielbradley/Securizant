@@ -1,0 +1,73 @@
+#!/tools/bin/bash
+#
+#       Copyright (c) 2004-2006 Daniel Robert Bradley. All rights reserved.
+#
+
+main()
+{
+	#echo "running build.script"
+
+	if [ "$1" == "prepare" ]
+	then
+		echo "build.script: preparing"
+		cd /
+		umask 027 &&
+		change_file_ownerships
+		change_software_scripts
+	fi
+}
+
+#
+#  1) First creates vfs links for mounts eg. /usr --> /mounts/USR
+#  2) Next creates the directories
+#  3) Last creates helper symbolic links eg. /media --> /local/media
+#
+
+change_file_ownerships()
+{
+	echo "build.script: changing file ownerships"
+
+	chown system:users      /mnt/build
+	chown system:users      /mnt/build/applications
+	chown system:users      /mnt/build/boot
+	chown system:users      /mnt/build/commands
+	chown system:users      /mnt/build/runtimes
+	chown system:users	/mnt/build/initrd
+	chown system:users      /mnt/build/libraries
+	chown system:users      /mnt/build/services
+	chown system:users      /mnt/build/toolchain
+	chown system:users	/mnt/build/kernels
+	chown system:users	/mnt/build/x11
+	chown system:users	/mnt/build/xdesktop
+	chown system:users	/mnt/build/features
+	chown system:users	/mnt/build/features/development
+	chown system:users	/mnt/build/features/development/commands
+	chown system:users	/mnt/build/features/development/libraries
+	chown system:users	/mnt/build/features/development/runtimes
+	chown system:users	/mnt/initrd
+
+	chown system:users      /mnt/log
+	chown -R system:users   /mnt/software
+	chown -R system:users   /mnt/source
+	chown system:users	/mnt/tmp
+
+	chmod 1777 /mnt/build
+	chmod 1777 /mnt/build/applications
+	chmod 1777 /mnt/build/boot
+	chmod 1777 /mnt/build/commands
+	chmod 1777 /mnt/build/libraries
+	chmod 1777 /mnt/build/runtimes
+	chmod 1777 /mnt/build/services
+	chmod 1777 /mnt/build/toolchain
+	chmod 1777 /mnt/build/kernels
+	chmod 1777 /mnt/build/x11
+	chmod 1777 /mnt/build/xdesktop
+	chmod 1777 /mnt/tmp
+}
+
+change_software_scripts()
+{
+	chmod -R 1777 /mnt/software
+	chmod -R 1777 /mnt/source
+}
+main $@

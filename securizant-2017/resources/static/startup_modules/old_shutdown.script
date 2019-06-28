@@ -1,0 +1,59 @@
+#!/system/software/bin/bash
+#
+#  /system/startup/modules/shutdown.script: User mode script
+#
+#  Written by Daniel Bradley <daniel.bradley@securizant.org>
+#
+#  This script is theoretically the reverse of the multiuser.script.
+#  The purpose of this script is to shutdown services and programs that were
+#  started by the multiuser.script to return the the system to a state
+#  appropriate for hand over to the reboot.script.
+#
+
+main()
+{
+	echo "Leaving multiuser..."
+
+	stop_startup
+	# stop_system_services
+	# stop_system_v_init_scripts
+	unmount_user_media
+}
+
+stop_startup()
+{
+	echo "Stopping user things"
+	if [ -d /etc/SYSTEM/STARTUP ]
+	then
+		for EXE in /etc/SYSTEM/STARTUP/*
+		do
+			if [ -x $EXE ]
+			then
+				$EXE stop
+			fi
+		done
+	fi
+}
+
+stop_system_v_init_scripts()
+{
+	echo "Stopping user sys V init scripts"
+	if [ -x /system/startup/modules/rc.sysvinit ]
+	then
+		/system/startup/modules/rc.sysvinit 
+	fi
+}
+
+stop_system_services()
+{
+	echo "Stopping system services: NOT IMPLEMENTED"
+#	$SYSTEM/startup/modules/services.script startup
+}
+
+unmount_user_media()
+{
+	echo "Unmounting user media"
+	/bin/umount -a
+}
+
+main $@

@@ -1,0 +1,51 @@
+#!/system/software/bin/bash
+#
+#  Loads modules for hardware devices installed in the
+#  computer.
+#
+#  Written by Daniel Bradley <d.bradley@securizant.org>
+#  Last modified 02 July 2006
+
+if [ -n "$1" ]
+then
+	SYSCONFDIR=/local/settings/NODES/$1
+else
+	SYSCONFDIR=/local/settings
+fi
+
+PATH=/system/software/bin:/system/software/sbin
+
+CAT=cat
+ECHO=echo
+MODPROBE=modprobe
+
+enable_network_adapters()
+{
+	echo "Enabling network adpaters"
+	for MODULE in $SYSCONFDIR/hardware/network_adapters/*
+	do
+		local MODULE_NAME=`${CAT} ${MODULE}`
+		if [ -n "$MODULE_NAME" ]
+		then
+			${MODPROBE} ${MODULE_NAME}
+			if [ $? -eq 0 ]
+			then
+				echo "Loaded module: $MODULE_NAME" 
+			else
+				echo "Failed to load: $MODULE_NAME"
+			fi
+		fi
+	done
+}
+
+main()
+{
+	$ECHO "  | "
+	$ECHO "  |------->  Hardware script"
+
+	shopt -s nullglob
+	${ECHO} "		Enabling hardware modules"
+	enable_network_adapters
+}
+
+main

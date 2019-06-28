@@ -1,0 +1,13 @@
+timeout 10
+
+title Securizant POC Core 2012 ISO 
+	kernel (cd)/Securizant/kernels/linux-2.6.11.12 root=/dev/ram ramdisk_size=100000 init=/linuxrc system_media=/dev/cdrom osdir=/Securizant/POC/2012 udev=true verbose=true system=system.img
+	initrd (cd)/Securizant/POC/2012/boot.img
+
+title Securizant LSB Core 2012 ISO 
+	kernel (cd)/Securizant/kernels/linux-2.6.11.12 root=/dev/ram ramdisk_size=100000 init=/linuxrc system_media=/dev/cdrom osdir=/Securizant/POC/2012 udev=true verbose=true system=system.img lsb=true
+	initrd (cd)/Securizant/POC/2012/boot.img
+
+title Securizant POC Desktop 2012 ISO
+	kernel (cd)/Securizant/kernels/linux-2.6.11.12 root=/dev/ram ramdisk_size=100000 init=/linuxrc system_media=/dev/cdrom osdir=/Securizant/POC/2012 udev=true verbose=true system=system.img lsb="/sys /dev /etc /proc /var /tmp /usr/X11R6" desktop=true
+	initrd (cd)/Securizant/POC/2012/boot.img

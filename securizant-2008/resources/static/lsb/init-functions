@@ -1,0 +1,206 @@
+#
+#  /lib/lsb/init-functions
+#  implementation for Securizant OS
+#  conforming to LSB Core 3.1
+#  
+
+#
+#  Securizant may implements these commands in a binary executable
+#  in the future.
+#
+#  SZT_EXE=/system/software/sbin/lsb-init-functions
+
+#
+# start_daemon [-f] [-n nicelevel] [-p pidfile] pathname [args ...]
+#
+start_daemon()
+{
+	let ret=0
+
+	local  PARSED=`parseArgs $@`
+	local   force=`echo $PARSED | cut -d':' -f1`
+	local    nice=`echo $PARSED | cut -d':' -f2`
+	local pidfile=`echo $PARSED | cut -d':' -f3`
+	local service=`echo $PARSED | cut -d':' -f4`
+	local    args=`echo $PARSED | cut -d':' -f5`
+	local    pids=""
+
+	if [ -n "$pidfile" -a -f "$pidfile" ]
+	then
+		pids=`cat $pidfile`
+	fi
+
+	#
+	#	If the service isn't currently running, OR
+	#	if the service is running and force is specified
+	#	start the service.
+	#
+	if [ -z "$pids" -o -n "$pids" -a -n "$force" ]
+	then
+		if [ -x $service ]
+		then
+			$service $args
+			return $?
+		else
+			echo "Service not executable ---------------------"
+			echo $service $args
+			return -1
+		fi
+	else
+		return 0
+	fi
+
+}
+
+#
+# killproc [-p pidfile] pathname [ signal ]
+#
+killproc()
+{
+	local  PARSED=`parseArgs $@`
+	local   force=`echo $PARSED | cut -d':' -f1`
+	local    nice=`echo $PARSED | cut -d':' -f2`
+	local pidfile=`echo $PARSED | cut -d':' -f3`
+	local service=`echo $PARSED | cut -d':' -f4`
+	local    args=`echo $PARSED | cut -d':' -f5`
+	local    pids=""
+
+	if [ -n "$pidfile" -a -f "$pidfile" ]
+	then
+		local failed=""
+		pids=`cat $pidfile`
+
+		for pid in $pids
+		do
+			local name=`basename $service`
+			local xids=`ps -A | grep "$name" | cut -d' ' -f2`
+
+			for running in $xids
+			do
+				if [ "$pid" -eq "$running" ]
+				then
+					kill $pid $args
+					pid=""
+					break
+				fi
+			done
+
+			if [ -n "$pid" ]
+			then
+				echo "Could not stop: $service ($pid)"
+				failed="1"
+			fi
+		done
+
+		if [ -z "$failed" ]
+		then
+			rm -f $pidfile
+		fi
+	else
+		local name=`basename $service`
+		local xids=`ps -A | grep "$name" | cut -d' ' -f2`
+
+		for running in $xids
+		do
+			echo kill $running $args
+		done
+	fi
+}
+
+#
+# pidofproc [-p pidfile] pathname
+#
+pidofproc()
+{
+	local  PARSED=`parseArgs $@`
+	local   force=`echo $PARSED | cut -d':' -f1`
+	local    nice=`echo $PARSED | cut -d':' -f2`
+	local pidfile=`echo $PARSED | cut -d':' -f3`
+	local service=`echo $PARSED | cut -d':' -f4`
+	local    args=`echo $PARSED | cut -d':' -f5`
+	local    pids=""
+
+	if [ -n "$pidfile" -a -f "$pidfile" ]
+	then
+		pids=`cat $pidfile`
+	else
+		local name=`basename $service`
+		pids=`ps -A | grep "$name" | cut -d' ' -f2`
+	fi
+
+	echo $pids
+}
+
+#
+# log_success_msg message
+#
+log_success_msg()
+{
+	echo "success: $1"
+	return
+}
+
+#
+# log_failure_msg message
+#
+log_failure_msg()
+{
+	echo "failure: $1"
+	return
+}
+
+#
+# log_warning_msg message
+#
+log_warning_msg()
+{
+	echo "warning: $1"
+	return
+}
+
+
+#
+#
+#
+readpidfile()
+{
+	local FILE=$1
+
+	local LINE=`read $FILE`
+}
+
+parseArgs()
+{
+	local force=""
+	local nice=""
+	local pidfile=""
+	local service=""
+
+	for arg in $@
+	do
+		case $arg in
+			-f)
+				force=1
+				shift;;
+			-n)
+				nice=$2;
+				shift 2;;
+			-p)
+				pidfile=$2
+				shift 2;;
+			--)
+				shift; break;;
+		esac
+	done
+
+	service=$1
+	shift
+
+	if [ -z "$pidfile" ]
+	then
+		local name=`basename $service`
+		pidfile="/var/run/$name.pid"
+	fi
+
+	echo "$force:$nice:$pidfile:$service:$@"
+}

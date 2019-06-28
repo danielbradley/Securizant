@@ -1,0 +1,6 @@
+libraries/1
+libraries/2
+libraries/x-dep/1
+libraries/x-dep/2
+libraries/x-dep/3
+

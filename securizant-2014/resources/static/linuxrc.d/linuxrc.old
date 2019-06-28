@@ -1,0 +1,45 @@
+#!/root/bin/bash
+#
+#  This file is the first thing that is executed when Securizant is booted.
+#  It will first try to located a SYSTEM partition, then 
+#
+#
+#
+PATH=/root/bin
+
+#
+#  First must mount proc so that we can use e2fs labels
+
+mount -n -s proc -t proc /proc
+
+#
+#  Attempt to mount the system partition
+
+mount -n -s -L SYSTEM /mounts/SYSTEM -o ro
+
+
+#
+#  Attempt to mount the local parition
+
+mount -n -s -L LOCAL /local -o rw
+
+#
+#  If /mounts/SYSTEM was successfully mounted then use images on it, else
+#  see if there are images on /mounts/LOCAL
+#
+if [ -d /mounts/SYSTEM/securizant/images ]
+then
+	mount -n -s /mounts/SYSTEM/securizant/images/boot.e2   /boot -o loop,ro
+	mount -n -s /mounts/SYSTEM/securizant/images/system.e2 /usr  -o loop,ro
+	mount -n -s /mounts/SYSTEM/securizant/images/var.e2    /var  -o loop,ro
+
+elif [ -d /local/securizant/images ]
+then
+	mount -n -s /local/securizant/images/boot.e2   /boot -o loop,ro
+	mount -n -s /local/securizant/images/system.e2 /usr  -o loop,ro
+	mount -n -s /local/securizant/images/var.e2    /var  -o loop,ro
+fi
+
+bash
+exec /root/bin/init
+

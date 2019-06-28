@@ -1,0 +1,47 @@
+#!/boot/bin/bash
+#
+#  /boot/scripts/network.script
+#
+#  Written by Daniel Bradley <daniel.bradley@securizant.org>
+#
+
+SERVICES_LINK_DIR=/etc/SYSTEM/SERVICES
+LINK_PREFIX=run
+
+main()
+{
+	shopt -s nullglob
+
+	case "$1" in
+	"startup" )
+		services_startup
+		;;
+	"shutdown" )
+		services_shutdown
+		;;
+	*)
+		echo "Usage: services.script startup | shutdown"
+		;;
+	esac
+}
+
+
+services_startup()
+{
+	echo "Starting system services"
+	for SERVICE in ${SERVICES_LINK_DIR}/${LINK_PREFIX}.*
+	do
+		${SERVICE} start
+	done
+}
+
+services_shutdown()
+{
+	echo "Shutting down system services"
+	for SERVICE in ${SERVICES_LINK_DIR}/${LINK_PREFIX}.*
+	do
+		${SERVICE} stop
+	done
+}
+
+main $@

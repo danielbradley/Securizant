@@ -1,0 +1,6 @@
+This directory contains the various scripts
+that are used to build the Securizant OS
+
+The scripts in toolchain are run first,
+then the scripts in the directories specified
+in the *.txt file chosen in the 'project' file.

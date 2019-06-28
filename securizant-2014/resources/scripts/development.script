@@ -1,0 +1,60 @@
+#!/tools/bin/bash
+#
+#       Copyright (c) 2004-2006 Daniel Robert Bradley. All rights reserved.
+#
+
+IMG_PREFIX="/system/features/development"
+
+main()
+{
+	if [ "$1" == "prepare" ]
+	then
+#		echo "running development.script"
+
+		cd ${IMG_PREFIX}
+		umask 027 &&
+		change_file_ownerships
+
+	elif [ "$1" == "finish" ]
+	then
+		echo ""
+	fi
+}
+
+change_file_ownerships()
+{
+	echo "development.script: changing file ownerships"
+
+	chown system:users	${IMG_PREFIX}
+	chown system:users	${IMG_PREFIX}/software
+	chown system:users	${IMG_PREFIX}/software/commands
+	chown system:users	${IMG_PREFIX}/software/libraries
+	chown system:users	${IMG_PREFIX}/software/runtimes
+	chown system:users	${IMG_PREFIX}/software/bin
+	chown system:users	${IMG_PREFIX}/software/include
+	chown system:users	${IMG_PREFIX}/software/{lib,man}
+	chown system:users	${IMG_PREFIX}/software/man/man?
+	chown system:users	${IMG_PREFIX}/software/sbin
+}
+
+set_suid_exes()
+{
+	local EXE=${IMG_PREFIX}/software/runtimes/KDE-3.5.4/bin/kcheckpass
+	if [ -f $EXE ]
+	then
+		chown root:users $EXE
+		chmod 4755 $EXE
+	fi
+}
+
+remove_lost_and_found()
+{
+	rmdir -rf ${IMG_PREFIX}/lost+found
+}
+
+remove_self()
+{
+	rm ${IMG_PREFIX}/system.script
+}
+
+main $@

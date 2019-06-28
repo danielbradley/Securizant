@@ -1,0 +1,52 @@
+#
+# Owner	Directory		Type	Target (in System)
+
+# Core
+
+system	libraries/core/min/1	libraries
+system	libraries/core/min/2	libraries
+system	libraries/core/1	libraries
+
+system	commands/core/min/1	commands
+system	commands/core/1		commands
+system	commands/1		commands
+system	commands/1b		commands
+
+system	services		services
+
+# Core + Dev
+
+system	features/development/libraries/1 libraries	features/development
+system	features/development/commands/1 commands	features/development
+system	features/development/runtimes/perl runtimes	features/development
+
+# Desktop
+
+system	features/desktop/libraries/x-dep/1 libraries	features/desktop
+system	features/desktop/libraries/x-dep/2 libraries	features/desktop
+system	features/desktop/libraries/x-dep/3 libraries	features/desktop
+
+##system	libraries/x-dep/1	libraries	features/desktop
+##system	libraries/x-dep/2	libraries	features/desktop
+##system	libraries/x-dep/3	libraries	features/desktop
+
+#root	x11
+
+#system	features/desktop/libraries/1 libraries		features/desktop
+
+##system	xdesktop/lsb-desktop/1	libraries	features/desktop
+
+#system	xdesktop/KDE-3.5.4/1	runtimes	features/desktop
+##system	xdesktop/KDE-3.5.4/2	runtimes	software/X11R6
+##system	xdesktop/KDE-3.5.4/3	runtimes	software/X11R6
+##system	xdesktop/KDE-3.5.4/4	runtimes	software/X11R6
+
+#system	xdesktop/GTKv2.6/1	runtimes	features/desktop
+#system	xdesktop/GTKv2.6/2	runtimes	features/desktop
+#system	xdesktop/GTKv2.6/3	runtimes	features/desktop
+#system	xdesktop/GTKv2.6/4	runtimes	features/desktop
+#system	xdesktop/GTKv2.6/5	runtimes	features/desktop
+
+#system	libraries/x-dep/4	libraries	features/desktop
+
+#system	precompiled		applications
