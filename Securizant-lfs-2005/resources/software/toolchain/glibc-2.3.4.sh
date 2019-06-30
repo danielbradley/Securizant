@@ -222,6 +222,7 @@ install_package()
 		then
 			cd $BUILD/glibc-build &&
 			make install > /mnt/log/${PACKAGE}-$VERSION-install.log 2>&1 &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/ldd &&
 			touch $BUILD/glibc-build/SUCCESS.INSTALL
 		fi
 	fi
