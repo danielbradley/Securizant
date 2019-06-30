@@ -112,7 +112,6 @@ complete()
 	if [ -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 	then
 		cd $BUILD/$PACKAGE-$VERSION &&
-		cp -r /local/settings/network/ssl /system/default/settings/network &&
 		rm -rf $BUILD/$PACKAGE-$VERSION/*
 	fi
 }
