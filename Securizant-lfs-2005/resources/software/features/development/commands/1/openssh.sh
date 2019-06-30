@@ -74,6 +74,7 @@ configure_package()
 ##			CFLAGS="-march=i386"
 			./configure \
         	    --prefix=$DEST \
+				--sysconfdir=/local/settings/services/sshd \
 				--localstatedir=/system/mounts/TEMP/tmp \
 				--with-ssl-dir=/system/features/development/software/libraries/crypto/openssl-1.0.2s &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
