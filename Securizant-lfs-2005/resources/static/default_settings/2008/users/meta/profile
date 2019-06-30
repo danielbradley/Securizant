@@ -1,0 +1,46 @@
+#
+#	Securizant Linux
+#	Default profile
+#
+
+LC_ALL=POSIX
+CHOST=i386-pc-linux-gnu
+CVS_RSH=ssh
+
+#  Set the path
+#
+#	First check local software
+
+PATH=/local/software/bin
+
+#	Second check system software
+
+PATH=$PATH:/system/software/bin
+
+if [ -d /system/features/desktop/X11R6/bin ]
+then
+	PATH=$PATH:/system/features/desktop/X11R6/bin
+fi
+
+#	Last check system sbin
+
+PATH=$PATH:/system/software/sbin
+
+#	Export
+
+export LC_ALL CHOST PATH CVS_RSH
+
+#  Add colour to ls
+alias ls='ls --color'
+
+#  Disable bash's executable path hashing
+set +h
+
+#  Set the default umask to a secure setting
+umask 027
+
+if [ ! -d "${HOME}" -o "${HOME:0:7}" == "/system" ]
+then
+	export HOME=`/local/settings/users/meta/create_temporary_home.sh`
+	cd "${HOME}"
+fi

@@ -1,0 +1,102 @@
+#!/tools/bin/bash
+#
+#       Copyright (c) 2004-2006 Daniel Robert Bradley. All rights reserved.
+#
+
+main()
+{
+	if [ "$1" == "prepare" ]
+	then
+		echo "initrd.script: preparing"
+
+		cd /system/mounts/INITRD
+		umask 027 &&
+	
+		copy_linuxrc &&
+		create_dev_files &&
+		change_file_ownerships
+	fi
+}
+
+copy_linuxrc()
+{
+	cp linuxrc.d/linuxrc /system/mounts/INITRD/linuxrc
+}
+
+change_file_ownerships()
+{
+	echo "initrd.script: changing file modes"
+
+	chmod 555 /system/mounts/INITRD/linuxrc
+#	chmod 555 /system/mounts/INITRD/bin/bash
+#	chmod 555 /system/mounts/INITRD/bin/mount
+}
+
+create_dev_files()
+{
+	local DEV=/system/mounts/INITRD/dev
+	if [ ! -e $DEV/hda ]
+	then
+                mknod -m 666 $DEV/null   c 1 3
+                mknod -m 666 $DEV/zero   c 1 5
+                mknod -m 666 $DEV/random c 1 8
+
+		mknod -m 622 $DEV/console c 5 1
+
+		mknod -m 640 $DEV/loop0   b 7 0
+		mknod -m 640 $DEV/loop1   b 7 1
+		mknod -m 640 $DEV/loop2   b 7 2
+		mknod -m 640 $DEV/loop3   b 7 3
+		mknod -m 640 $DEV/loop4   b 7 4
+		mknod -m 640 $DEV/loop5   b 7 5
+		mknod -m 640 $DEV/loop6   b 7 6
+		mknod -m 640 $DEV/loop7   b 7 7
+		mknod -m 640 $DEV/loop8   b 7 8
+		mknod -m 640 $DEV/loop9   b 7 9
+
+                mknod -m 640 $DEV/hda  b 3 0
+                mknod -m 640 $DEV/hda1 b 3 1
+                mknod -m 640 $DEV/hda2 b 3 2
+                mknod -m 640 $DEV/hda3 b 3 3
+                mknod -m 640 $DEV/hda4 b 3 4
+                mknod -m 640 $DEV/hda5 b 3 5
+                mknod -m 640 $DEV/hda6 b 3 6
+                mknod -m 640 $DEV/hda7 b 3 7
+                mknod -m 640 $DEV/hda8 b 3 8
+                mknod -m 640 $DEV/hda9 b 3 9
+
+                mknod -m 640 $DEV/hdb  b 3 64
+                mknod -m 640 $DEV/hdb1 b 3 65
+                mknod -m 640 $DEV/hdb2 b 3 66
+                mknod -m 640 $DEV/hdb3 b 3 67
+                mknod -m 640 $DEV/hdb4 b 3 68
+                mknod -m 640 $DEV/hdb5 b 3 69
+                mknod -m 640 $DEV/hdb6 b 3 70
+                mknod -m 640 $DEV/hdb7 b 3 71
+                mknod -m 640 $DEV/hdb8 b 3 72
+                mknod -m 640 $DEV/hdb9 b 3 73
+
+                mknod -m 640 $DEV/hdc  b 22 0
+                mknod -m 640 $DEV/hdc1 b 22 1
+                mknod -m 640 $DEV/hdc2 b 22 2
+                mknod -m 640 $DEV/hdc3 b 22 3
+                mknod -m 640 $DEV/hdc4 b 22 4
+                mknod -m 640 $DEV/hdc5 b 22 5
+                mknod -m 640 $DEV/hdc6 b 22 6
+                mknod -m 640 $DEV/hdc7 b 22 7
+                mknod -m 640 $DEV/hdc8 b 22 8
+
+                mknod -m 640 $DEV/hdd  b 22 64
+                mknod -m 640 $DEV/hdd1 b 22 65
+                mknod -m 640 $DEV/hdd2 b 22 66
+                mknod -m 640 $DEV/hdd3 b 22 67
+                mknod -m 640 $DEV/hdd4 b 22 68
+                mknod -m 640 $DEV/hdd5 b 22 69
+                mknod -m 640 $DEV/hdd6 b 22 70
+                mknod -m 640 $DEV/hdd7 b 22 71
+                mknod -m 640 $DEV/hdd8 b 22 72
+                mknod -m 640 $DEV/hdd9 b 22 73
+	fi
+}
+
+main $@
