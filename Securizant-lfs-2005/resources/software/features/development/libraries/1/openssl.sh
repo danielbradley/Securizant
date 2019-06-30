@@ -73,8 +73,8 @@ configure_package()
 			cd $BUILD/$PACKAGE-$VERSION &&
 #			CFLAGS="-march=i386"
 			./config \
-        	                --prefix=$DEST &&
-				--openssldir=/system/defaults/settings/system/ssl
+        	    --prefix=$DEST \
+				--openssldir=/local/settings/network/ssl &&
 #				--host=$CHOST --target=$CHOST &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
@@ -112,6 +112,7 @@ complete()
 	if [ -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 	then
 		cd $BUILD/$PACKAGE-$VERSION &&
+		cp -r /local/settings/network/ssl /system/default/settings/network &&
 		rm -rf $BUILD/$PACKAGE-$VERSION/*
 	fi
 }
