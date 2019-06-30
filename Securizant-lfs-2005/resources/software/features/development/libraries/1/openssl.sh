@@ -57,7 +57,7 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			#altersource . "/dev" "/system/devices"
+			altersource . "/dev" "/system/devices" ".h"
 			#altersource . "/tmp" "/system/mounts/TEMP"
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
