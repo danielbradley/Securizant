@@ -71,7 +71,7 @@ configure_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-#			CFLAGS="-march=i386"
+##			CFLAGS="-march=i386"
 			./configure \
         	    --prefix=$DEST \
 				--localstatedir=/system/mounts/TEMP/tmp \
