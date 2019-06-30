@@ -74,7 +74,7 @@ configure_package()
 #			CFLAGS="-march=i386"
 			./config \
         	    --prefix=$DEST \
-				--openssldir=/local/settings/network/ssl &&
+				--openssldir=/local/settings/networks/ssl &&
 #				--host=$CHOST --target=$CHOST &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
