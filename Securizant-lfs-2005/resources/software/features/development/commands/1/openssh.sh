@@ -57,7 +57,9 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			altersource . "/tmp" "/system/mounts/TEMP"
+			altersource . "/bin/sh"    "/system/software/bin/sh"
+			altersource . "/tmp"       "/system/mounts/TEMP"
+			altersource . "/var/empty" "/local/data/_system/empty"
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
@@ -72,7 +74,7 @@ configure_package()
 			cd $BUILD/$PACKAGE-$VERSION &&
 #			CFLAGS="-march=i386"
 			./configure \
-        	                --prefix=$DEST \
+        	    --prefix=$DEST \
 				--localstatedir=/system/mounts/TEMP/tmp \
 				--with-ssl-dir=/system/features/development/software/libraries/crypto/openssl-1.0.2s &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
