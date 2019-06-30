@@ -57,6 +57,7 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
+			altersource . "/dev"       "/system/devices" &&
 			altersource . "/tmp"       "/system/mounts/TEMP" &&
 			altersource . "/var/empty" "/local/data/_system/empty" &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
