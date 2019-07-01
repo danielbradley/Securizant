@@ -222,7 +222,16 @@ install_package()
 		then
 			cd $BUILD/glibc-build &&
 			make install > /mnt/log/${PACKAGE}-$VERSION-install.log 2>&1 &&
-			sed -i 's@/bin/sh@/system/software/bin/sh@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/ldd &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/catchsegv &&
+			sed -i 's@/dev/nullh@/system/devices/null@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/catchsegv &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/ldd       &&
+			sed -i 's@/dev/nullh@/system/devices/null@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/ldd       &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/mtrace    &&
+			sed -i 's@/dev/nullh@/system/devices/null@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/mtrace    &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/tzselect  &&
+			sed -i 's@/dev/nullh@/system/devices/null@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/tzselect  &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/xtrace    &&
+			sed -i 's@/dev/nullh@/system/devices/null@g' /system/software/runtimes/GNU/$PACKAGE-$VERSION/bin/xtrace    &&
 			touch $BUILD/glibc-build/SUCCESS.INSTALL
 		fi
 	fi
