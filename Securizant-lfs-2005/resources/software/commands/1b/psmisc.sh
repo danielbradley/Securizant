@@ -53,6 +53,9 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
+			sed -i 's|"/proc|"/system/processes|g' src/fuser.c
+			sed -i 's|"/proc|"/system/processes|g' src/killall.c
+			sed -i 's|"/proc|"/system/processes|g' src/pstree.c
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
