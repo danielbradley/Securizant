@@ -183,8 +183,7 @@ configure_source()
 				--with-headers=/system/software/source/linux/include \
 				--without-selinux \
 				--sysconfdir=/local/settings/system/meta \
-				--localstatedir=/local/data/_system \
-				--runstatedir=/system/mounts/TEMP/runstate &&
+				--localstatedir=/local/data/_system &&
 				
 #				--sysconfdir=/local/settings    #Szt extra
 #				--build=$CHOST --host=$CHOST --target=$CHOST &&
