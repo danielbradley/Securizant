@@ -66,7 +66,7 @@ configure_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 #			CFLAGS="-march=i386"
-			./configure \
+			./configure -ssl \
         	                --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
 #				--host=$CHOST --target=$CHOST &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
