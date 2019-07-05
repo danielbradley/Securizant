@@ -184,9 +184,7 @@ configure_source()
 				--without-selinux \
 				--sysconfdir=/local/settings/system/meta \
 				--localstatedir=/local/data/_system &&
-				
-#				--sysconfdir=/local/settings    #Szt extra
-#				--build=$CHOST --host=$CHOST --target=$CHOST &&
+
 			touch $BUILD/glibc-build/SUCCESS.CONFIGURE
 #		else
 #			echo CFLAGS="-mcpu=i386 -O2" ../$PACKAGE/configure \
