@@ -74,11 +74,11 @@ configure_package()
 #			CFLAGS="-march=i386"
 			mkdir -p $DEST/{bin,include,lib,libexec} &&
 			./configure \
+				--prefix=$DEST \
 				--disable-dependency-tracking \
 				--with-ca-path=/system/default/settings/system/ssl/certs \
 				--with-ca-file=/system/default/settings/system/ssl/certs/ca-certificates.crt \
-        	                --prefix=$DEST \
-				--with-ssl=/system/features/development/software/libraries/crypto/openssl-1.0.2s &&
+				--with-ssl=/system/software &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
 	fi
