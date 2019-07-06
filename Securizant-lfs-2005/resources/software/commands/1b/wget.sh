@@ -67,8 +67,8 @@ configure_package()
 			cd $BUILD/$PACKAGE-$VERSION &&
 #			CFLAGS="-march=i386"
 			./configure \
-        		--prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
-#        		--with-libssl-prefix=/system/software &&
+        		--prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION \
+        		--with-libssl-prefix=/system/software &&
 #				--host=$CHOST --target=$CHOST &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
@@ -95,7 +95,9 @@ install_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make install &&
+	        make install &&
+	        cp /etc/resolv.conf /local/settings/networks/meta/resolv.conf &&
+	        ln -s /local/settings/networks/meta/resolv.conf /local/settings/lsb/resolv.conf &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi
