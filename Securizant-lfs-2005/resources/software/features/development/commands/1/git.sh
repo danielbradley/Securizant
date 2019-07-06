@@ -74,8 +74,8 @@ configure_package()
 #			CFLAGS="-march=i386"
 			./configure \
         	    --prefix=$DEST \
+				--with-openssl \
 				--with-curl=/system/features/development/software \
-				--with-ssl-dir=/system/features/development/software \
 				--with-perl=/system/features/development/software/bin/perl \
 				--localstatedir=/local/data/git &&
 #				--host=$CHOST --target=$CHOST &&
