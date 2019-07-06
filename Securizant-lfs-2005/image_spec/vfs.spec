@@ -14,6 +14,7 @@
 <link location="/bin/stty"          target="../tools/bin/stty"/>
 <link location="/bin/rm"            target="../tools/bin/rm"/>
 <link location="/dev"               target="system/devices"/>
+<link location="/etc"               target="/tools/etc"/>
 <link location="/home"              target="local/users"/>
 <link location="/lib"               target="system/software/lib"/>
 <link location="/local/settings"    target="../system/mounts/TEMP/settings"/>
