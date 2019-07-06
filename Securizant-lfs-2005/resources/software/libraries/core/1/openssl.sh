@@ -73,6 +73,7 @@ configure_package()
 			cd $BUILD/$PACKAGE-$VERSION &&
 #			CFLAGS="-march=i386"
 			./config \
+				shared \
         	    --prefix=$DEST \
 				--openssldir=/local/settings/networks/ssl &&
 #				--host=$CHOST --target=$CHOST &&
