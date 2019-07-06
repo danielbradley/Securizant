@@ -55,6 +55,8 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
+			sed -i 's@PREFIX=@PREFIX=/local/settings@' Makefile &&
+			sed -i 's@ETC=etc@ETC=lsb@'                Makefile &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
