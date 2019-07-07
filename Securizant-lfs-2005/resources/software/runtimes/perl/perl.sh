@@ -55,6 +55,9 @@ patch_package()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
+			cd $BUILD/$PACKAGE-$VERSION &&
+			sed -i 's@/var/tmp@/system/mounts/TEMP@g' lib/CGI.pm   &&
+			sed -i 's@/var/tmp@/system/mounts/TEMP@g' t/op/taint.t &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
