@@ -59,7 +59,8 @@ patch_package()
 			sed -i 's@/dev@/system/devices@g'                      client.c    &&
 			sed -i 's@/etc@/local/settings/lsb@g'                  pathnames.h &&
 			sed -i 's@/var/log@/local/log@g'                       pathnames.h &&
-			sed -i 's@/var@/system/mounts/TEMP/runstate/@g'        pathnames.h &&
+			sed -i 's@/var@/system/mounts/TEMP/runstate@g'         pathnames.h &&
+			sed -i 's@/lib@@g'                                     pathnames.h &&
 			sed -i 's@/var/lib/@/local/data/_system/lib/@g'        dhcpcd.sh   &&
 			sed -i 's@/var/lib@/local/data/_system/lib@g'          dhcpcd.8    &&
 			sed -i 's@/var/log@/local/log@g'                       dhcpcd.8    &&
