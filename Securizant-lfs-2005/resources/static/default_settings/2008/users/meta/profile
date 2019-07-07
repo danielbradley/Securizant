@@ -60,7 +60,6 @@ then
     PATH=$PATH:/system/software/sbin
 fi
 
-
 #  Add colour to ls
 alias ls='ls --color'
 
