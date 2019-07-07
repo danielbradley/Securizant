@@ -185,6 +185,8 @@ mount_tmpfs()
 	cp -Rp /system/default/users        ${SYSTEM}/mounts/TEMP
 	
 	mkdir ${SYSTEM}/mounts/TEMP/log
+	mkdir ${SYSTEM}/mounts/TEMP/runstate
+	mkdir ${SYSTEM}/mounts/TEMP/runstate/run
 
 	chmod 1777 ${SYSTEM}/mounts/TEMP/users
 	chown system:users ${SYSTEM}/mounts/TEMP
