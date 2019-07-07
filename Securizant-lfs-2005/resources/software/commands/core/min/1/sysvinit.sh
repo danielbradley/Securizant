@@ -59,27 +59,24 @@ patch_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 
-			patch -Np1 -i ${SOURCE}/${PKG_DIR}/${PACKAGE}-${VERSION}-szt-args.patch &&
-			sed -i 's@Sending processes@& started by init@g' \
-				src/init.c &&
-			sed -i 's@/usr/share/man@/man@g' src/Makefile &&
-			sed -i 's/$(BIN_OWNER)/system/' src/Makefile &&
-			sed -i 's/$(BIN_GROUP)/users/' src/Makefile &&
-			sed -i 's@/usr@@g' src/Makefile &&
-			sed -i 's@/etc/inittab@/system/startup/configuration/inittab@' \
-				src/paths.h &&
-			sed -i 's@/sbin@/system/software/sbin@g' src/paths.h src/halt.c src/init.c src/killall5.c &&
+			patch -Np1 -i ${SOURCE}/${PKG_DIR}/${PACKAGE}-${VERSION}-szt-args.patch     &&
+			sed -i 's@Sending processes@& started by init@g'               src/init.c   &&
+			sed -i 's@/usr/share/man@/man@g'                               src/Makefile &&
+			sed -i 's/$(BIN_OWNER)/system/'                                src/Makefile &&
+			sed -i 's/$(BIN_GROUP)/users/'                                 src/Makefile &&
+			sed -i 's@/usr@@g'                                             src/Makefile &&
+			sed -i 's@/etc/inittab@/system/startup/configuration/inittab@' src/paths.h  &&
+			sed -i 's@/var/run@/system/mounts/TEMP/runstate/run@'          src/paths.h  &&
+			sed -i 's@/sbin@/system/software/sbin@g'                       src/paths.h src/halt.c src/init.c src/killall5.c &&
 
 			# Replace PATH in key files
 			sed -i 's@PATH=/bin:/usr/bin:/sbin:/usr/sbin@PATH=/system/software/bin:/system/software/sbin@g' src/init.h src/initscript.sample src/shutdown.c &&
 
 			# Replace /bin/xxx in several files
-
-			sed -i 's|/bin/sh|/system/software/bin/sh|g' `grep -l -R "/bin/sh" *` &&
+			sed -i 's|/bin/sh|/system/software/bin/sh|g'    `grep -l -R "/bin/sh" *`    &&
 			sed -i 's|/bin/mount|/system/software/bin/sh|g' `grep -l -R "/bin/mount" *` &&
-
-			sed -i 's|/etc|/local/settings/lsb|g' `grep -l -R "/etc" *` &&
-			sed -i 's|/dev|/system/devices|g' `grep -l -R "/dev" *` &&
+			sed -i 's|/etc|/local/settings/lsb|g'           `grep -l -R "/etc" *`       &&
+			sed -i 's|/dev|/system/devices|g'               `grep -l -R "/dev" *`       &&
 
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
