@@ -5,30 +5,61 @@
 
 LC_ALL=POSIX
 CHOST=i386-pc-linux-gnu
+TMPDIR=/system/mounts/TEMP
 CVS_RSH=ssh
 
-#  Set the path
-#
-#	First check local software
+#   Set the path
 
-PATH=/local/software/bin
+PATH=""
 
-#	Second check system software
+#   First check home directory
 
-PATH=$PATH:/system/software/bin
-
-if [ -d /system/features/desktop/X11R6/bin ]
+if [ -d "~/bin" ]
 then
-	PATH=$PATH:/system/features/desktop/X11R6/bin
+    PATH=$PATH:~/bin
+
+fi
+
+if [ -d "~/software/bin" ]
+then
+    PATH=$PATH:~/software/bin
+fi
+
+#	Next check local software
+
+if [ -d "/local/software/bin" ]
+then
+    PATH=$PATH:/local/software/bin
+fi
+
+#	Next check system software
+
+if [ -d "/system/software/bin" ]
+then
+    PATH=$PATH:/system/software/bin
+fi
+
+#   Next check for development tools
+
+if [ -d "/system/features/development/software/bin" ]
+then
+    PATH=$PATH:/system/features/development/software/bin
+fi
+
+#   Next check for desktop
+
+if [ -d "/system/features/desktop/software/bin" ]
+then
+    PATH=$PATH:/system/features/desktop/software/bin
 fi
 
 #	Last check system sbin
 
-PATH=$PATH:/system/software/sbin
+if [ -d "/system/software/sbin" ]
+then
+    PATH=$PATH:/system/software/sbin
+fi
 
-#	Export
-
-export LC_ALL CHOST PATH CVS_RSH
 
 #  Add colour to ls
 alias ls='ls --color'
@@ -44,3 +75,7 @@ then
 	export HOME=`/local/settings/users/meta/create_temporary_home.sh`
 	cd "${HOME}"
 fi
+
+#   Export
+
+export LC_ALL CHOST TMPDIR PATH CVS_RSH
