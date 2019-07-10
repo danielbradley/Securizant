@@ -58,6 +58,9 @@ change_file_ownerships()
 	chown system:users	/system/default/settings/networks/interfaces
 	chown system:users	/system/default/settings/networks/interfaces/eth0.iface
 	chown system:users	/system/default/settings/networks/meta
+	chown system:users	/system/default/settings/networks/ssl
+	chown system:users	/system/default/settings/networks/ssl/certs/
+	chown system:users	/system/default/settings/networks/ssl/certs/ca-certificates.crt
 	chown system:users	/system/default/settings/services
 	chown system:users	/system/default/settings/software
 	chown system:users	/system/default/settings/system
