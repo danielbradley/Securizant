@@ -187,10 +187,14 @@ mount_tmpfs()
 	mkdir ${SYSTEM}/mounts/TEMP/log
 	mkdir ${SYSTEM}/mounts/TEMP/runstate
 	mkdir ${SYSTEM}/mounts/TEMP/runstate/run
+	mkdir ${SYSTEM}/mounts/TEMP/tmp
 
 	chmod 1777 ${SYSTEM}/mounts/TEMP/users
+	chmod 1777 ${SYSTEM}/mounts/TEMP/tmp
+
 	chown system:users ${SYSTEM}/mounts/TEMP
 	chown system:users ${SYSTEM}/mounts/TEMP/users
+	chown system:users ${SYSTEM}/mounts/TEMP/tmp
 }
 
 
