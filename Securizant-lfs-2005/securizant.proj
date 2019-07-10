@@ -1,6 +1,6 @@
 NAME=Securizant-LFS-Core-2005.05
 
-RESOURCE_URL="http://cdn.securizant.org/resources/Securizant/2017/source"
+RESOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source"
 
 BUILD=/local/bos/target
 TARGET=$BUILD/${NAME}
