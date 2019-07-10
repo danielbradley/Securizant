@@ -5,7 +5,8 @@
 
 LC_ALL=POSIX
 CHOST=i386-pc-linux-gnu
-TMPDIR=/system/mounts/TEMP
+TMPDIR=/system/mounts/TEMP/tmp
+TEMPDIR=/system/mounts/TEMP/tmp
 CVS_RSH=ssh
 
 #   Set the path
@@ -77,4 +78,4 @@ fi
 
 #   Export
 
-export LC_ALL CHOST TMPDIR PATH CVS_RSH
+export LC_ALL CHOST TMPDIR TEMPDIR PATH CVS_RSH
