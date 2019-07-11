@@ -40,6 +40,7 @@ prepare()
 {
 	download ${URL} ${PKG_DIR} ${PKG}
 	mkdir -p $DEST
+	mkdir -p /system/mounts/TEMP/tmp
 }
 
 unpack_package()
