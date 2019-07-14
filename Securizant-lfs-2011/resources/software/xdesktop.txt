@@ -1,0 +1,6 @@
+xdesktop/lsb-desktop/1
+xdesktop/KDE-3.5.4/1
+xdesktop/KDE-3.5.4/2
+xdesktop/KDE-3.5.4/3
+xdesktop/KDE-3.5.4/4
+

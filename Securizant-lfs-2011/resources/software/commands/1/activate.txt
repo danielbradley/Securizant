@@ -1,0 +1,9 @@
+compression/bzip2
+file/which
+filesystem/e2fsprogs
+network/dhcpcd
+network/inetutils
+network/iproute2
+network/net-tools
+system/mdadm
+terminal/less

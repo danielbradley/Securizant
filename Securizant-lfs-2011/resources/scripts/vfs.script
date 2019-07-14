@@ -1,0 +1,65 @@
+#!/tools/bin/bash
+#
+#       Copyright (c) 2004-2006 Daniel Robert Bradley. All rights reserved.
+#
+
+main()
+{
+#	echo "running vfs.prep.script"
+
+	if [ "$1" == "prepare" ]
+	then
+		cd /
+		umask 027 &&
+		change_file_ownerships &&
+		change_file_permissions
+	elif [ "$1" == "finish" ]
+	then
+		redirect_bin
+	fi
+}
+
+#
+#  1) First creates vfs links for mounts eg. /usr --> /mounts/USR
+#  2) Next creates the directories
+#  3) Last creates helper symbolic links eg. /media --> /local/media
+#
+
+change_file_ownerships()
+{
+	echo "vfs.script: changing file ownerships"
+
+	chown system:users	/local
+	chown system:users	/local/data
+	chown system:users      /system
+	chown system:users	/mnt
+	chown system:users	/usr
+	chown system:users	/usr/bin
+	#chown system:users	/usr/include
+}
+
+change_file_permissions()
+{
+	echo "vfs.script: changing file permissions"
+
+	chmod 755  /bin
+	chmod 755  /local
+	chmod 755  /local/data
+	chmod 755  /system
+#	chmod 750  /usr
+	chmod 1777 /tmp
+
+	ls -lad /bin
+}
+
+redirect_bin()
+{
+	cd /
+	if [ -d /bin ]
+	then
+		rm -rf /bin
+		ln -s system/software/bin bin 
+	fi
+}
+
+main $@

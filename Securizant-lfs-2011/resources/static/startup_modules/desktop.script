@@ -1,0 +1,116 @@
+#!/system/software/bin/bash
+#
+#  /system/startup/modules/desktop.script: User mode script
+#
+#  Written by Daniel Bradley <daniel.bradley@securizant.org>
+#  Last modified: 20 Dec 2007
+
+#  When this script is run the startup.script has run which
+#  has set the hostname, initialized hardware and setup
+#  networking.
+
+SYSTEM=/system
+DESKTOP=$SYSTEM/software/X11R6
+
+PATH=/system/software/bin:/system/software/sbin:/system/software/X11R6/bin:/system/software/X11R6/software/bin
+export PATH
+
+main()
+{
+	doEcho "Running desktop.script"
+
+	if [ -n "$desktop" ]
+	then
+		create_X_config
+		if [ -f /local/settings/desktop/XF86Config ]
+		then
+			start_kde
+		else
+			sleep 10000
+		fi
+	else
+		sleep 10000
+	fi
+}
+
+start_kde()
+{
+	if [ -f $DESKTOP/software/runtimes/KDE-3.5.4/bin/kdm ]
+	then
+		$DESKTOP/software/runtimes/KDE-3.5.4/bin/kdm -nodaemon
+	else
+		sleep 10000
+	fi
+}
+
+doEcho()
+{
+	if [ -n "$verbose" ]
+	then
+		echo $1
+	fi
+
+	if [ -n "$step" ]
+	then
+		$BASH
+	fi
+}
+
+create_X_config()
+{
+	local XConf=/local/settings/desktop/XF86Config
+
+	if [ ! -f ${XConf} ]
+	then
+		/system/software/X11R6/bin/XFree86 -configure > /system/devices/null 2> /system/devices/null
+
+		if [ -f ~/XF86Config.new ]
+		then
+			mv ~/XF86Config.new   ${XConf}
+			modify_paths          ${XConf}
+			modify_mouse_settings ${XConf}
+
+			if [ "`are_in_vmware`" == "true" ]
+			then
+				modify_default_resolutions ${XConf}
+			fi
+		fi
+	fi
+}
+
+modify_mouse_settings()
+{
+	XConf="$1"
+	sed -i 's@/dev/mouse@/system/devices/input/mouse0@g' ${XConf}
+	sed -i 's@Driver      "mouse"@Driver      "mouse"\n\tOption      "ZAxisMapping" "4 5"@g' ${XConf}
+}
+
+modify_paths()
+{
+	XConf="$1"
+	sed -i 's@/usr@/system/software@g' ${XConf}
+}
+
+are_in_vmware()
+{
+	local In=`grep "VMWare" /system/processes/pci`
+	if [ -n "${In}" ]
+	then
+		echo "true"
+	else
+		echo "false"
+	fi
+}
+
+modify_default_resolutions()
+{
+	sed -i 's@Viewport   0 0@Viewport 0 0\n\t\tModes "1024x768" ### "1400x1050" "1280x1024" "1024x768"@g' ${XConf}
+}
+
+
+
+################################################################
+##   Main section
+##
+
+main $@

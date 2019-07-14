@@ -1,0 +1,11 @@
+compression/gzip
+development/m4
+development/patch
+file/file
+file/findutils
+file/grep
+file/tar
+text_processing/gawk
+text_processing/sed
+utils/mktemp
+
