@@ -76,7 +76,7 @@ configure_package()
 			./configure \
 				--prefix=$DEST \
 				--with-openssl \
-				--with-curl=/system/features/development/software/bin/curl \
+				--with-curl=/system/features/development/software \
 				--with-perl=/system/features/development/software/bin/perl \
 				--localstatedir=/local/data/git &&
 #				--host=$CHOST --target=$CHOST &&
