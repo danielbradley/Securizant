@@ -9,7 +9,7 @@ source /mnt/software/altersource.sh
 INSTALL_BASE=/system/features/development/software/commands
 CATEGORY=development
 PACKAGE=git
-VERSION=2.9.5
+VERSION=2.26.2
 ARCHIVE=tar.gz
 UNZIP=-z
 
@@ -58,7 +58,7 @@ patch_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 			altersource . "/dev" "/system/devices"
-			altersource . "/tmp" "/system/mounts/TEMP"
+			altersource . "/tmp" "/system/mounts/TEMP/tmp"
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
