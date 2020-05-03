@@ -13,22 +13,22 @@ download()
 	if [ -z "${Src}" -o -z "${Dir}" -o -z "${Pkg}" ]
 	then
 		echo "Download: incorrect parameters: \"${Src}\" \"${Dir}\" \"${Pkg}\""
-		return
+		return -1
 	fi
 	
-	echo "Download: \"${Src}\" \"${Dir}\" \"${Pkg}\""
+	echo "Download: \"${Src}\" \"${Dir}\" \"${Pkg}\"" &&
 
 	if [ ! -f "/mnt/source/${Dir}/${Pkg}" ]
 	then
 		if [ ! -d "/mnt/source/${Dir}" ]
 		then
-			mkdir -p "/mnt/source/${Dir}"
+			mkdir -p "/mnt/source/${Dir}" &&
 			mkdir -p "/system/features/source/${Dir}"
 		fi
 	
-		cd "/mnt/source/${Dir}"
-		wget "${Src}/${Dir}/${Pkg}"
-		cp "${Pkg}" "/system/features/source/${Dir}"
+		cd "/mnt/source/${Dir}" &&
+		wget "${Src}/${Dir}/${Pkg}" &&
+		cp "${Pkg}" "/system/features/source/${Dir}" &&
 		cd ${Cd}
 	fi
 }
