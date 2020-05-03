@@ -9,7 +9,7 @@ source /mnt/software/altersource.sh
 INSTALL_BASE=/system/features/development/software/libraries
 CATEGORY=network
 PACKAGE=curl
-VERSION=7.65.1
+VERSION=7.70.0
 ARCHIVE=tar.bz2
 UNZIP=-j
 
