@@ -72,8 +72,9 @@ configure_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 #			CFLAGS="-march=i386"
+			PATH=$PATH:/system/features/development/software/bin \
 			./configure \
-        	    --prefix=$DEST \
+				--prefix=$DEST \
 				--with-openssl \
 				--with-curl=/system/features/development/software/bin/curl \
 				--with-perl=/system/features/development/software/bin/perl \
