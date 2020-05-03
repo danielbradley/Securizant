@@ -39,7 +39,7 @@ change_file_ownerships()
 	chown system:users	${IMG_PREFIX}/core/tools
 	chown system:users	${IMG_PREFIX}/features
 	chown system:users	${IMG_PREFIX}/features/desktop
-	chown system:users	${IMG_PREFIX}/features/develepment
+	chown system:users	${IMG_PREFIX}/features/development
 	chown system:users	${IMG_PREFIX}/features/server
 }
 
