@@ -1,0 +1,13 @@
+#
+# Owner	Directory		Type	Target (in System)
+
+system	libraries/core/min/1	libraries
+system	libraries/core/min/2	libraries
+system	libraries/core/1	libraries
+
+system	commands/core/min/1	commands
+system	commands/core/1		commands
+system	commands/1		commands
+system	commands/1b		commands
+
+system	services		services

@@ -1,0 +1,191 @@
+#!/system/software/bin/bash
+
+PATH=/system/software/bin:/system/software/sbin
+
+main()
+{
+	do_sync
+	user_shutdown
+
+	set_linefeed_mode
+	kill_all_processes
+#	write_command
+#	perpetuate_random_seed
+
+#	unmount_net_filesystems
+#	disable_swap
+#	unmount_user_media
+
+	echo "Pausing for SMP processes"
+	sleep 3
+	wait_for_smp_processes
+
+#	unmount_x11_partition
+#	unmount_usr_partition
+#	unmount_var_partition
+	unmount_local_partition
+#	unmount_system_partition
+
+	do_sync
+	do_reboot $0
+}
+
+user_shutdown()
+{
+	echo "Stopping user programs and services"
+	if [ -x /system/startup/scripts/shutdown.script ]
+	then
+		/system/startup/scripts/shutdown.script
+	fi
+}
+
+#
+#  Set linefeed mode to avoid staircase effect
+#
+set_linefeed_mode()
+{
+	echo "Setting linefeed mode"
+	stty onlcr
+}
+
+#
+#  Kill all processes
+#
+kill_all_processes()
+{
+	echo "Killing all processes"
+	killall5 -15
+	echo Waiting 3 seconds
+	sleep 1; echo 1; sleep 1; echo 2; sleep 1; echo 3!
+	killall5 -9
+}
+
+#
+#  Carry a random seed between reboots.
+#
+perpetuate_random_seed()
+{
+	echo "Saving random seed from /dev/urandom in /var/sys/random-seed."
+	${DD} if=/dev/urandom of=/var/sys/random-seed count=1 bs=5112 2> /dev/null
+}
+
+#
+#  Turn off swapping
+#
+disable_swap()
+{
+	echo "Turning off swap."
+	swapoff -a
+}
+
+
+#
+#  Unmount local filesystems
+#
+unmount_user_media()
+{
+	echo "Unmounting user media"
+	umount -a -r
+	umount -a -l
+}
+
+
+#
+#  Pause
+#
+pause_for_a_bit()
+{
+	echo "sleep 1"
+	sleep 1
+}
+
+#
+#  Wait for SMP processes
+#
+wait_for_smp_processes()
+{
+	echo "Waiting for SMP processes"
+	echo wait
+}
+
+unmount_x11_partition()
+{
+	echo "Unmounting /system/features/desktop"
+	umount -d /system/features/desktop
+	if [ $? -eq "1" ]
+	then
+		bash
+		/system/software/bin/umount -d -l /system/features/desktop
+	fi
+	/system/software/bin/losetup -d /system/devices/loop3
+}
+
+unmount_var_partition()
+{
+	echo "Unmounting /mounts/VAR"
+	/bin/umount -d /mounts/VAR
+	if [ $? -eq "1" ]
+	then
+		bash
+		/bin/umount -d -l /mounts/VAR
+	fi
+	/bin/losetup -d /dev/loop/1
+}
+
+unmount_local_partition()
+{
+	echo "Unmounting /local"
+	local MOUNT_INFO=`cat /system/processes/mounts | grep "/local"`
+	local DEVICE=`echo "$MOUNT_INFO" | cut -f 1 -d' '`
+	if [ -n "$MOUNT_INFO" -a -n "$DEVICE" ]
+	then
+		umount -d /local
+		if [ $? -ne 0 ]
+		then
+			bash
+			mount -n -o remount,ro $DEVICE /local
+			#umount -d -l /local
+		fi
+	fi
+}
+
+unmount_system_partition()
+{
+	echo "Unmounting /mounts/SYSTEM"
+	/bin/umount -l -d /mounts/SYSTEM
+	if [ $? -eq "1" ]
+	then
+		bash
+	fi
+}
+
+#
+#  Sync to disk
+#
+do_sync()
+{
+	echo "Syncing to disk"
+	sync
+}
+
+#
+#  Do reboot
+#
+do_reboot()
+{
+	if [ "/system/startup/modules/reboot.script" == "$0" ]
+	then
+		echo "Rebooting"
+		reboot
+	elif [ "/system/startup/modules/halt.script" == "$0" ]
+	then
+		echo "Halting"
+		halt
+	else
+		echo "Unknow script called: Rebooting"
+		reboot
+	fi	
+}
+
+main $@
+

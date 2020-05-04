@@ -1,0 +1,115 @@
+#!/system/software/bin/bash
+
+main()
+{
+	local Prefix="$1"
+
+	start
+
+	#scan ${Prefix}/system/software/applications
+	scan_type ${Prefix}/system/software/commands
+	#scan /system/software/drivers
+	#scan /system/software/runtimes
+	#scan /system/software/services
+
+	stop
+}
+
+scan_type()
+{
+	local Type="$1"
+	local Base=`basename ${Type}`
+	
+	echo "<h1>${Base}</h1>"
+
+	for Category in ${Type}/*
+	do
+		scan_category ${Category}
+	done
+}
+
+scan_category()
+{
+	local Category="$1"
+	local Base=`basename ${Category}`
+
+	echo "<h2>${Base}</h2>"
+
+	for Package in ${Category}/*
+	do
+		scan_package ${Package}
+	done
+}
+
+scan_package()
+{
+	local Package="$1"
+	local Base=`basename ${Package}`
+
+
+	echo "<h3>${Base}</h3>"	
+
+	local Current=`pwd`
+	cd ${Package}
+
+	local Files=`find .`
+	for File in $Files
+	do
+		local Basename=`basename "${File}"`
+
+		local Bin=`strings "${File}" | grep "/bin" | grep -v "/system/software/bin"`
+		local Dev=`strings "${File}" | grep "/dev" | grep -v "/development" | grep -v "/system/devices/"`
+		local Etc=`strings "${File}" | grep "/etc"`
+		local Usr=`strings "${File}" | grep "/usr"`
+		local Var=`strings "${File}" | grep "/var"`
+
+		if [ -n "$Dev" -o -n "$Etc" -o -n "$Var" ]
+		then
+			echo "<b>${Basename}</b>"
+			echo "<small>${File}</small>"
+
+			process "/bin" "${Bin}"
+			process "/dev" "${Dev}"
+			process "/etc" "${Etc}"
+			process "/var" "${Var}"
+		fi
+	done
+
+	cd ${Current}
+}
+
+process()
+{
+	local Target="$1"
+	local Output="$2"
+
+	if [ -n "$Output" ]
+	then
+		echo "<div>"
+		echo "<i>${Target}</i>"
+		echo "<pre>"
+		echo "$Output" | sed 's@<@\&#60;@g' | sed 's@>@\&#62;@g'
+		echo "</pre>"
+		echo "</div>"
+	fi
+}
+
+start()
+{
+	echo "<html>"
+	echo "<head>"
+	echo "<style>"
+	echo "BODY { width: 1000%; }"
+	echo "PRE { padding: 10px; background: #DDD; border: solid thin #333; }"
+	echo "DIV { padding: 5px; padding-left: 25px; }"
+	echo "</style>"
+	echo "</head>"
+	echo "<body>"
+}
+
+stop()
+{
+	echo "</body></html>"
+}
+
+main $@
