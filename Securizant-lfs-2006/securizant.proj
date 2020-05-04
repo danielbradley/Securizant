@@ -1,0 +1,30 @@
+NAME=Securizant-LFS-Core-2006.01
+
+RESOURCE_URL="http://cdn.securizant.org/resources/Securizant/2006/source"
+
+BUILD=/local/bos/target
+TARGET=$BUILD/${NAME}
+PROFILE=dev.txt
+
+EDITION=POC
+RELEASE=2006
+
+#
+#  Project variables
+#
+
+PROC_DIR=usr/processes
+SYSTEM_BASE=/system
+SOFTWARE_BASE=/system/software
+SYSDATA_BASE=/local
+
+RESOURCE_DIR=$PROJECT_DIR/resources
+SRC_GEN_DIR=$PROJECT_DIR/generated      # not used ??
+IMAGE_SPEC_DIR=$PROJECT_DIR/image_spec
+ROOT_SPEC_NAME=root.spec                # not used ??
+INITRD=/usr/mounts/INITRD
+
+#
+#  Tools image
+#
+#TOOLS_IMAGE_NAME=tools/lfstools-6.1.1.e2

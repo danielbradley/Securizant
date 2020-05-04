@@ -1,0 +1,101 @@
+#!/system/software/bin/bash
+#
+#  Initializes the loop back interface (127.0.0.1) and
+#  setups up any other interfaces that have been specified
+#  in the network system configuration directory
+
+#  By Daniel Bradley <daniel.bradley@securizant.org>
+#  Last modified 02 July 2006
+
+NETSYSCONFDIR=/local/settings/networks
+if [ -n "$1" ]
+then
+	NETSYSCONFDIR=/local/settings/NODES/$1/networks
+fi
+
+COMMANDS_NETWORK="/system/software/commands/network"
+
+SYSDATA="/local/data/_system"
+
+#  Programs
+IFCONFIG=/system/software/bin/ifconfig
+
+BASH=bash
+DHCPCD=dhcpcd
+ECHO=echo
+MODPROBE=modprobe
+SED=sed
+
+#  Allow unmatched wildcards to fail gracefully
+shopt -s nullglob
+
+main()
+{
+	if [ -d "${COMMANDS_NETWORK}" -a -d "${NETSYSCONFDIR}" ]
+	then
+		enable_loopback
+		enable_interfaces
+	fi
+}
+
+enable_loopback()
+{
+	doEcho "Enabling loopback"
+	${IFCONFIG} lo 127.0.0.1 broadcast 127.255.255.255 netmask 255.0.0.0
+}
+
+enable_interfaces()
+{
+	if [ -d ${NETSYSCONFDIR}/interfaces ]
+	then
+		doEcho "Configuring network interfaces"
+
+		for IFACE in $NETSYSCONFDIR/interfaces/*.iface
+		do
+			enable_interface ${IFACE}
+		done
+	fi
+}
+
+enable_interface()
+{
+	local INTERFACE=`${SED} -n s/INTERFACE=//p < $1`
+	local TYPE=`${SED} -n s/TYPE=//p < $1`
+	local IP_ADDRESS=`${SED} -n s/IP_ADDRESS=//p < $1`
+	local BROADCAST=`${SED} -n s/BROADCAST=//p < $1`
+	local NETMASK=`${SED} -n s/NETMASK=//p < $1`
+	local STARTUP_STATE=`${SED} -n s/STARTUP_STATE=//p < $1`
+
+
+	if [ "${TYPE}" = "dhcp" ]
+	then
+		if [ -f ${SYSDATA}/run/dhcpcd-${INTERFACE}.pid ]
+		then
+			rm -f ${SYSDATA}/run/dhcpcd-${INTERFACE}.pid
+		fi
+
+		echo /system/software/sbin/dhcpcd ${INTERFACE}
+		/system/software/sbin/dhcpcd ${INTERFACE}
+		${IFCONFIG} $INTERFACE $STARTUP_STATE
+	else
+
+		${ECHO} "Configuring interface: ${INTERFACE}:${IP_ADDRESS} (${STARTUP_STATE})"
+		echo	${IFCONFIG} $INTERFACE $STARTUP_STATE $IP_ADDRESS broadcast $BROADCAST netmask $NETMASK
+		${IFCONFIG} $INTERFACE $STARTUP_STATE $IP_ADDRESS broadcast $BROADCAST netmask $NETMASK
+	fi
+}
+
+doEcho()
+{
+	if [ -n "$verbose" ]
+	then
+		$ECHO $1
+	fi
+
+	if [ -n "$step" ]
+	then
+		$BASH
+	fi
+}
+
+main

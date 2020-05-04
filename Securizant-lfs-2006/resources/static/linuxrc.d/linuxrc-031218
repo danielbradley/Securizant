@@ -1,0 +1,91 @@
+#!/bin/bash
+#
+#  This file is the first thing that is executed when Securizant is 
+#  booted.
+#  It will first try to located a SYSTEM partition, then
+#
+#
+#
+export PATH=/bin:/sbin:/mounts/ROOT/bin:/mounts/ROOT/sbin
+
+#
+#  First must mount proc so that we can use e2fs labels
+
+mount -n -s proc -t proc /mounts/PROC
+if [ $? -eq 0 ]
+then
+	PROC_MOUNTED=true
+fi
+
+#
+#  Attempt to mount the system partition
+
+mount -n -s -L SYSTEM /mounts/SYSTEM -o ro
+if [ $? -eq 0 ]
+then
+	SYSTEM_MOUNTED=true
+fi
+
+
+if [ ! -d /mounts/SYSTEM/operating_system ]
+then
+	mount -n -s /dev/cdroms/cdrom0 /mounts/ISO -o ro
+	if [ $? -eq 0 ]
+	then
+		ISO_MOUNTED=true
+	fi
+fi
+
+if [ ! -d /mounts/SYSTEM/operating_system ]
+then
+	mount -n -s /dev/cdroms/cdrom1 /mounts/ISO -o ro
+	if [ $? -eq 0 ]
+	then
+		ISO_MOUNTED=true
+	fi
+fi
+
+#
+#  If /mounts/SYSTEM was successfully mounted then use images on it, else
+#  see if there are images on /mounts/LOCAL
+#
+if [ -d /mounts/SYSTEM/operating_system/media_images ]
+then
+        mount -n -s /mounts/SYSTEM/operating_system/media_images/root.e2 /mounts/ROOT  -o loop,ro
+elif [ -d /mounts/ISO/operating_system/media_images ]
+then
+	mount -n -s /mounts/ISO/operating_system/media_images/root.e2 /mounts/ROOT -o loop,ro
+fi
+
+
+
+echo Pivoting roots
+#bash
+
+#
+#  Pivot root
+#
+cd /mounts/ROOT
+pivot_root . ./mounts/INITRD
+
+#
+#  Move mounted partitions
+#
+
+if [ "$PROC_MOUNTED" = "true" ]
+then
+	mount -n --move /mounts/INITRD/mounts/PROC /mounts/PROC
+fi
+if [ "$SYSTEM_MOUNTED" = "true" ]
+then
+	mount -n --move /mounts/INITRD/mounts/SYSTEM /mounts/SYSTEM
+fi
+if [ "$ISO_MOUNTED" = "true" ]
+then
+	mount -n --move /mounts/INITRD/mounts/ISO /mounts/ISO
+fi
+mount -n --move /mounts/INITRD/dev /dev
+
+echo Leaving linuxrc
+exec chroot . /sbin/init <dev/console >dev/console 2>&1
+

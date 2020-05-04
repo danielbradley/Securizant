@@ -1,0 +1,4 @@
+compression/zlib 
+i18n/gettext
+terminal/ncurses
+system/shadow
