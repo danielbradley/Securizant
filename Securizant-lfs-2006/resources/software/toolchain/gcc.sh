@@ -8,8 +8,8 @@ source /mnt/software/download.sh
 GNU_BASE=/system/software/commands
 CATEGORY=development
 PACKAGE=gcc
-VERSION=3.4.3
-DNAME=gnu-3.4.3
+VERSION=4.0.3
+DNAME=gnu-4.0.3
 ARCHIVE=tar.bz2
 UNZIP=-j
 

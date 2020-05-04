@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 CATEGORY=toolchain
 
 PACKAGE=glibc
-VERSION=2.3.4
+VERSION=2.3.6
 ARCHIVE=tar.bz2
 UNZIP=-j
 
@@ -16,9 +16,9 @@ URL=$RESOURCE_URL
 PKG_DIR=core/toolchain
 PKG=$PACKAGE-$VERSION.$ARCHIVE
 PKG2=$PACKAGE-linuxthreads-$VERSION.$ARCHIVE
-PATCH1=glibc-2.3.4-rtld_search_dirs-1.patch
-PATCH2=glibc-2.3.4-fix_test-1.patch
-PATCH3=glibc-2.3.4-tls_assert-1.patch
+#PATCH1=glibc-2.3.4-rtld_search_dirs-1.patch
+#PATCH2=glibc-2.3.4-fix_test-1.patch
+#PATCH3=glibc-2.3.4-tls_assert-1.patch
 
 SOURCE=/mnt/source
 BUILD=/mnt/build/toolchain
@@ -65,9 +65,9 @@ setup()
 	echo "URL3: $URL"
 	download ${URL} ${PKG_DIR} ${PKG}
 	download ${URL} ${PKG_DIR} ${PKG2}
-	download ${URL} ${PKG_DIR} ${PATCH1}
-	download ${URL} ${PKG_DIR} ${PATCH2}
-	download ${URL} ${PKG_DIR} ${PATCH3}
+	#download ${URL} ${PKG_DIR} ${PATCH1}
+	#download ${URL} ${PKG_DIR} ${PATCH2}
+	#download ${URL} ${PKG_DIR} ${PATCH3}
 
 	mkdir -p /system/software/runtimes/GNU/${PACKAGE}-${VERSION}/etc
 	touch /system/software/runtimes/GNU/${PACKAGE}-${VERSION}/etc/ld.so.conf
@@ -89,9 +89,9 @@ apply_patches()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH1}
-			patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH2}
-			patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH3}
+			#patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH1}
+			#patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH2}
+			#patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH3}
 
 			# Modify paths.h
 			
