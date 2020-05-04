@@ -15,7 +15,7 @@ UNZIP=-j
 URL=$RESOURCE_URL
 PKG_DIR=core/toolchain
 PKG=$PACKAGE-$VERSION.$ARCHIVE
-PKG2=$PACKAGE-linuxthreads-$VERSION.$ARCHIVE
+#PKG2=$PACKAGE-linuxthreads-$VERSION.$ARCHIVE
 #PATCH1=glibc-2.3.4-rtld_search_dirs-1.patch
 #PATCH2=glibc-2.3.4-fix_test-1.patch
 #PATCH3=glibc-2.3.4-tls_assert-1.patch
@@ -64,7 +64,7 @@ setup()
 {
 	echo "URL3: $URL"
 	download ${URL} ${PKG_DIR} ${PKG}
-	download ${URL} ${PKG_DIR} ${PKG2}
+	#download ${URL} ${PKG_DIR} ${PKG2}
 	#download ${URL} ${PKG_DIR} ${PATCH1}
 	#download ${URL} ${PKG_DIR} ${PATCH2}
 	#download ${URL} ${PKG_DIR} ${PATCH3}
@@ -78,7 +78,7 @@ unpack_package()
 	if [ ! -d $BUILD/$PACKAGE-$VERSION ]
 	then
 		tar -C $BUILD -xvf $SOURCE/${PKG_DIR}/${PKG} $UNZIP
-		tar -C $BUILD/$PACKAGE-$VERSION -xvf $SOURCE/${PKG_DIR}/${PKG2} $UNZIP
+		#tar -C $BUILD/$PACKAGE-$VERSION -xvf $SOURCE/${PKG_DIR}/${PKG2} $UNZIP
 	fi
 }
 
