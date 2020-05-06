@@ -37,6 +37,8 @@ RM=/tools/software/bin/rm
 
 main()
 {
+	return
+
 	prepare &&
 	unpack_package &&
 	apply_patches &&
