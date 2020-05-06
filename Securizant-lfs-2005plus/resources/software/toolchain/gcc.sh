@@ -35,7 +35,7 @@ main()
 	configure_source &&
 	compile_source &&
 	install_package &&
-	modify_package &&
+#	modify_package &&
 	complete
 }
 
@@ -126,14 +126,19 @@ install_package()
 
 modify_package()
 {
+	local GCC="$GNU_BASE/$CATEGORY/$DNAME/bin/gcc"
+	local FILENAME=`${GCC}  -print-libgcc-file-name`
+	local SPECFILEDIR=`dirname $FILENAME`
+	local SPECFILE="$SPECFILEDIR/specs"
+
 	if [ -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MODIFY ]
 		then
 			cd $BUILD/$PACKAGE-build &&
-			local Gcc="$GNU_BASE/$CATEGORY/$DNAME/bin/gcc" &&
-			local Specfile=`${Gcc} --print-file specs` &&
-			sed -i 's@ /lib/ld-linux.so.2@ /system/software/lib/ld-linux.so.2@g' \
+			$GCC -dumpspecs > $SPECFILE
+
+			sed -i 's@^/lib/ld-linux.so.2@/system/software/lib/ld-linux.so.2@g' \
 				"$Specfile" &&
 			sed -i '/\*startfile_prefix_spec:/{n;s@.*@/system/software/lib/ @}' \
 				"$Specfile" &&
