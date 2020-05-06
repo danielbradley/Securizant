@@ -34,7 +34,7 @@ main()
 
 setup()
 {
-	download ${URL} ${PKG_DIR} ${PATCH0}
+	download ${URL} ${PKG_DIR} ${PATCH1}
 }
 
 unpack_package()
