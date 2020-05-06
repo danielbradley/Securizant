@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 GNU_BASE=/system/software/commands
 CATEGORY=development
 PACKAGE=gcc
-VERSION=3.4.3
+VERSION=4.0.3
 DNAME=gnu-3.4.3
 ARCHIVE=tar.bz2
 UNZIP=-j
@@ -16,8 +16,6 @@ UNZIP=-j
 URL=$RESOURCE_URL
 PKG_DIR=core/toolchain
 PKG=$PACKAGE-$VERSION.$ARCHIVE
-PATCH1=$PACKAGE-$VERSION-no_fixincludes-1.patch
-PATCH2=$PACKAGE-$VERSION-linkonce-1.patch
 
 SOURCE=/mnt/source
 BUILD=/mnt/build/toolchain
@@ -44,8 +42,6 @@ main()
 setup()
 {
 	download ${URL} ${PKG_DIR} ${PKG}
-	download ${URL} ${PKG_DIR} ${PATCH1}
-	download ${URL} ${PKG_DIR} ${PATCH2}
 }
 
 unpack_package()
@@ -63,9 +59,10 @@ apply_patches()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCH ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1 &&
-			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH2 &&
-			sed -i 's/install_to_$(INSTALL_DEST) //' libiberty/Makefile.in &&
+			sed -i 's/install_to_$(INSTALL_DEST) //'       libiberty/Makefile.in &&
+			sed -i 's/^XCFLAGS =$/& -fomit-frame-pointer/'       gcc/Makefile.in &&
+			sed -i 's@\./fixinc\.sh@-c true@'                    gcc/Makefile.in &&
+			sed -i 's/@have_mktemp_command@/yes/'                gcc/gccbug.in   &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCH
 		fi
 	fi
