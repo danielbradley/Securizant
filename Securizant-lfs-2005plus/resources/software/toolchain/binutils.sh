@@ -9,7 +9,7 @@ GNU_BASE=/system/software/commands
 CATEGORY=development
 PACKAGE=binutils
 VERSION=2.16.1
-DNAME=gnu-3.4.3
+DNAME=gnu-4.0.3
 ARCHIVE=tar.bz2
 UNZIP=-j
 

@@ -9,7 +9,7 @@ GNU_BASE=/system/software/commands
 CATEGORY=development
 PACKAGE=gcc
 VERSION=4.0.3
-DNAME=gnu-3.4.3
+DNAME=gnu-4.0.3
 ARCHIVE=tar.bz2
 UNZIP=-j
 
@@ -117,7 +117,7 @@ install_package()
 #			mkdir -p /system/software/libraries/gnu/g++-3.3.1/lib &&
 #                        cp /system/software/Applications/development/gnu-3.3.1/lib/libstdc++* \
 #                                /system/software/libraries/gnu/g++-3.3.1/lib &&
-			ln -s gcc $GNU_BASE/$CATEGORY/$DNAME/bin/cc &&
+			ln -sf gcc $GNU_BASE/$CATEGORY/$DNAME/bin/cc &&
 
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
