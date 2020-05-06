@@ -53,6 +53,7 @@ apply_patches()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
+			cd $BUILD/$PACKAGE-$VERSION                &&
 			patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH1} &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
