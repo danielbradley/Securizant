@@ -34,6 +34,7 @@ main()
 
 setup()
 {
+	download ${URL} ${PKG_DIR} ${PKG}
 	download ${URL} ${PKG_DIR} ${PATCH1}
 }
 
