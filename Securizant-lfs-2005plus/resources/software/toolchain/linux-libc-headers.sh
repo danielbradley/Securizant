@@ -39,10 +39,10 @@ setup()
 
 unpack_package()
 {
-	if [ ! -d $BUILD_DIR/$PACKAGE-$VERSION ]
+	if [ ! -d $BUILD/$PACKAGE-$VERSION ]
 	then
-		mkdir -p $BUILD_DIR
-		tar -C $BUILD_DIR -xvf $SOURCE/${PKG_DIR}/${PKG} $UNZIP
+		mkdir -p $BUILD
+		tar -C $BUILD -xvf $SOURCE/${PKG_DIR}/${PKG} $UNZIP
 	fi
 }
 
@@ -68,7 +68,7 @@ install_package()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 		then
-			cd $BUILD_DIR/$PACKAGE-$VERSION
+			cd $BUILD/$PACKAGE-$VERSION
 			cp -Rv include/asm-i386 /system/software/source/linux/include/asm
 			cp -Rv include/linux    /system/software/source/linux/include/linux
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
