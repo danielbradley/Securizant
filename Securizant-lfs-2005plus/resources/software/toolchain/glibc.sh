@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 CATEGORY=toolchain
 
 PACKAGE=glibc
-VERSION=2.3.4
+VERSION=2.3.6
 ARCHIVE=tar.bz2
 UNZIP=-j
 
@@ -35,37 +35,25 @@ echo "URL: $URL"
 main()
 {
 	echo "URL2: $URL"
-	copy_kernel_headers &&
-	setup &&
-	unpack_package &&
-	apply_patches &&
-	configure_source &&
-	compile_source &&
-	install_package &&
-	install_locales &&
-	activate_package &&
-	complete &&
+	setup               &&
+	unpack_package      &&
+	apply_patches       &&
+	configure_source    &&
+	compile_source      &&
+	install_package     &&
+	install_locales     &&
+	activate_package    &&
+	complete            &&
 #	overwrite_ldsoconf
 	echo
-}
-
-copy_kernel_headers()
-{
-	if [ ! -d /system/software/source/linux/include/asm ]
-	then
-		mkdir -p /system/software/source/linux/include/asm
-		cp -Rf /tools/include/asm         /system/software/source/linux/include
-		cp -Rf /tools/include/linux       /system/software/source/linux/include
-		chown -R 100:1000 /system/software/source/linux
-	fi
 }
 
 setup()
 {
 	echo "URL3: $URL"
+	download ${URL} ${PKG_DIR} ${PATCH0}
 	download ${URL} ${PKG_DIR} ${PKG}
 	download ${URL} ${PKG_DIR} ${PKG2}
-	download ${URL} ${PKG_DIR} ${PATCH1}
 	download ${URL} ${PKG_DIR} ${PATCH2}
 	download ${URL} ${PKG_DIR} ${PATCH3}
 
