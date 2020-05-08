@@ -82,9 +82,9 @@ configure_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			./configure                 &&
-			make check                  &&
-			make distclean              &&
+			#./configure                 &&
+			#make check                  &&
+			#make distclean              &&
 			./configure \
 				--enable-zlib \
         	                --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
