@@ -22,7 +22,7 @@ BUILD=/mnt/build/toolchain			# Where this package should be built
 
 main()
 {
-	echo $PACKAGE-$VERSION
+	echo $PACKAGE-$VERSION &&
 
 	setup           &&
 	unpack_package  &&
@@ -34,7 +34,7 @@ main()
 
 setup()
 {
-	download ${URL} ${PKG_DIR} ${PKG}
+	download ${URL} ${PKG_DIR} ${PKG} &&
 	download ${URL} ${PKG_DIR} ${PATCH1}
 }
 
@@ -42,7 +42,7 @@ unpack_package()
 {
 	if [ ! -d $BUILD/$PACKAGE-$VERSION ]
 	then
-		mkdir -p $BUILD
+		mkdir -p $BUILD &&
 		tar -C $BUILD -xvf $SOURCE/${PKG_DIR}/${PKG} $UNZIP
 	fi
 }
@@ -58,7 +58,6 @@ apply_patches()
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
-	return 0
 }
 
 
@@ -70,9 +69,9 @@ install_package()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 		then
-			cd $BUILD/$PACKAGE-$VERSION
-			cp -Rv include/asm-i386 /system/software/source/linux/include/asm
-			cp -Rv include/linux    /system/software/source/linux/include/linux
+			cd $BUILD/$PACKAGE-$VERSION &&
+			cp -Rv include/asm-i386 /system/software/source/linux/include/asm &&
+			cp -Rv include/linux    /system/software/source/linux/include/linux &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi
