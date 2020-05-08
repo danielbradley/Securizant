@@ -1,4 +1,4 @@
-<image name="build.e2" mountpoint="/mnt" fs="ext2" script="scripts/build.script" size="1999" mountflags="loop">
+<image name="build.e2" mountpoint="/mnt" fs="ext2" script="scripts/build.script" size="4000" mountflags="loop">
 <dir path="/build/toolchain"/>
 <dir path="/build/libraries"/>
 <dir path="/build/applications"/>
