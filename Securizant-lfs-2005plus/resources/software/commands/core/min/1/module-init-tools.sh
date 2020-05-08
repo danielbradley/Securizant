@@ -38,7 +38,7 @@ main()
 prepare()
 {
 	download ${URL} ${PKG_DIR} ${PKG}
-	download ${URL} ${PKG_DIR} ${PACKAGE}-$VERSION}-modprobe-1.patch
+	download ${URL} ${PKG_DIR} ${PACKAGE}-${VERSION}-modprobe-1.patch
 	mkdir -p $COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
 }
 
