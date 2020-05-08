@@ -59,7 +59,7 @@ patch_package()
 			cd $BUILD/$PACKAGE-$VERSION &&
 			touch modprobe.conf.5 &&
 
-			patch -Np1 -i $SOURCE/$PKG_DIR/${PACKAGE}-$VERSION}-modprobe-1.patch
+			patch -Np1 -i $SOURCE/$PKG_DIR/${PACKAGE}-${VERSION}-modprobe-1.patch
 
 			sed -i 's@/lib/modules@/system/software/drivers@g' \
 				configure configure.in depmod.8 depmod.c \
