@@ -80,7 +80,7 @@ configure_source()
 #			CFLAGS="-march=i386" CXXFLAGS="-march=i386" \
 			../$PACKAGE-$VERSION/configure \
 				--prefix=$GNU_BASE/$CATEGORY/$DNAME \
-				--libexecdir=/system/software/commands/development/gnu-3.4.3/libexec \
+				--libexecdir=/system/software/commands/development/gnu-${VERSION}/libexec \
 				--enable-shared \
 				--enable-threads=posix \
 				--enable-__cxa_atexit \
