@@ -72,9 +72,9 @@ configure_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			./configure \
-	            --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION \
-                --sysconfdir=/local/settings/networks/meta &&
+			#./configure \
+	        #    --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION \
+            #    --sysconfdir=/local/settings/networks/meta &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
 	fi
