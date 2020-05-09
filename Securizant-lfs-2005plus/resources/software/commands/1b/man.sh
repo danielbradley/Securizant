@@ -84,11 +84,12 @@ configure_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 			./configure \
-				-confdir=/local/settings/software/commands/man \
 				-prefix=$DEST \
 				-bindir=$DEST/bin \
 				-mandir=$DEST/man \
 				-sbindir=$DEST/sbin \
+				-sysconfdir=/local/settings/software/commands/man \
+				-localstatedir=/local/data/commands/man \
 				--enable-mb-groff \
 				--disable-setuid &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
