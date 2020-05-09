@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=filesystem
 PACKAGE=e2fsprogs
-VERSION=1.39
+VERSION=1.40.2
 ARCHIVE=tar.bz2
 UNZIP=-j
 
