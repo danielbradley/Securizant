@@ -67,6 +67,9 @@ patch_package()
 			#altersource "." "/sys" "/system/mounts/SYS" ".c"
 			sed -i 's|/sys|/system/mounts/SYS|g'  udev_sysfs.c &&
 
+			sed -i 's|/etc/passwd|/local/settings/users/passwd|g'   udev_libc_wrapper.c &&
+			sed -i 's|/etc/shadow|/local/settings/private/shadow|g' udev_libc_wrapper.c &&
+
 			#	use altersource to replace legacy assumptions in rules
 			#
 			#
