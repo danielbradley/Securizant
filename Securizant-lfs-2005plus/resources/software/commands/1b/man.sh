@@ -62,9 +62,9 @@ patch_package()
 			mv man/it{_IT.88591,}                              &&
 			mv man/ja{_JP.eucJP,}                              &&
 
-			sed -i 's@\*_\*@??@'             man/Makefile.in   &&
+			sed -i 's,\*_\*,??,'             man/Makefile.in   &&
 
-			sed -i '@\t\@usr\/man@d'         src/man_db.conf.in	&&
+			sed -i '/\t\/usr\/man/d'        src/man_db.conf.in	&&
 
 			#sed -i 's@-is@&R@g'              configure         &&
 			#sed -i 's@/usr@@'                configure         &&
