@@ -8,9 +8,9 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=network
 PACKAGE=iproute2
-VERSION=2.6.11
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=2.6.16-060323
+ARCHIVE=tar.gz
+UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/commands
@@ -39,7 +39,7 @@ main()
 prepare()
 {
 	download ${URL} ${PKG_DIR} ${PKG}
-	download ${URL} ${PKG_DIR} ${PATCH1}
+	#download ${URL} ${PKG_DIR} ${PATCH1}
 	mkdir -p $COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
 }
 
@@ -58,8 +58,8 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			sed -i '/^TARGETS/s@arpd@@g' misc/Makefile &&
-			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1 &&
+			#sed -i '/^TARGETS/s@arpd@@g' misc/Makefile &&
+			#patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1 &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
@@ -72,11 +72,9 @@ configure_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-#			CFLAGS="-march=i386"
 			./configure \
-        	                --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION \
-        	                --sysconfdir=/local/settings/networks/meta &&
-#				--host=$CHOST --target=$CHOST &&
+	            --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION \
+                --sysconfdir=/local/settings/networks/meta &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
 	fi
@@ -89,7 +87,7 @@ make_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make SBINDIR=$DEST/sbin &&
+	        make SBINDIR=$DEST/sbin &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
@@ -102,7 +100,7 @@ install_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make SBINDIR=$DEST/sbin install &&
+	        make SBINDIR=$DEST/sbin install &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi
