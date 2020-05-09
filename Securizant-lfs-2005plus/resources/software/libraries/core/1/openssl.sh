@@ -9,7 +9,7 @@ source /mnt/software/altersource.sh
 INSTALL_BASE=/system/software/libraries
 CATEGORY=crypto
 PACKAGE=openssl
-VERSION=1.1.1g
+VERSION=1.0.2s
 ARCHIVE=tar.gz
 UNZIP=-z
 
