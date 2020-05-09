@@ -103,8 +103,8 @@ install_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 			cd build &&
-			make install &&
-			make install-libs &&
+			make install      DESTDIR=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
+			make install-libs DESTDIR=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi
