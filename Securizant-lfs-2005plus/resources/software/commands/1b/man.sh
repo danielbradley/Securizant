@@ -25,6 +25,8 @@ BUILD=/mnt/build/commands
 
 main()
 {
+	return
+
 	echo Scripting $PACKAGE-$VERSION &&
 	prepare &&
 	unpack_package &&
