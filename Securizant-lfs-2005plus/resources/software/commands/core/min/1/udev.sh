@@ -1,6 +1,7 @@
 #!/tools/bin/bash
 
 source /mnt/software/download.sh
+source /mnt/software/altersource.sh
 
 COMMAND_BASE=/system/software/commands
 CATEGORY=system
@@ -53,11 +54,26 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			sed -i 's@/usr/bin/install@install@g' Makefile &&
-			sed -i 's/killall/echo killall/' Makefile &&
 
-			sed -i 's|/sys|/system/mounts/SYS|g' etc/init.d/udev.init.LSB &&
-			sed -i 's|/sys|/system/mounts/SYS|g' libsysfs/sysfs/libsysfs.h &&
+			#
+			#	Modify Makefile to not make assumptions
+			#
+			sed -i 's@/usr/bin/install@install@g' Makefile     &&
+			sed -i 's/killall/echo killall/'      Makefile     &&
+
+			#	overkill for now, use sed instead to
+			#	replace /sys in source files
+			#
+			#altersource "." "/sys" "/system/mounts/SYS" ".c"
+			sed -i 's|/sys|/system/mounts/SYS|g'  udev_sysfs.c &&
+
+			#	use altersource to replace legacy assumptions in rules
+			#
+			#
+			altersource "etc" "/sys"     "/system/mounts/SYS"      ".rules" &&
+			altersource "etc" "/bish/sh" "/system/software/bin/sh" ".rules" &&
+			
+			sed -i 's|/sys|/system/mounts/SYS|g' libsysfs/sysfs/libsysfs.h  &&
 
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
