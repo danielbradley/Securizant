@@ -114,7 +114,7 @@ install_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 	        make prefix=$DEST udevdir=/system/devices install &&
-	        install -m644 -D -v docs/writing_udev_rrules/index.html $DEST/share/doc/udev-096/index.html &&
+	        install -m644 -D -v docs/writing_udev_rules/index.html $DEST/share/doc/udev-096/index.html &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi
