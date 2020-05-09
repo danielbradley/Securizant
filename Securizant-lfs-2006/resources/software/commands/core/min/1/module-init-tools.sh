@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=utils
 PACKAGE=module-init-tools
-VERSION=3.1
+VERSION=3.2.2
 ARCHIVE=tar.bz2
 UNZIP=-j
 
@@ -38,6 +38,7 @@ main()
 prepare()
 {
 	download ${URL} ${PKG_DIR} ${PKG}
+	download ${URL} ${PKG_DIR} ${PACKAGE}-${VERSION}-modprobe-1.patch
 	mkdir -p $COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
 }
 
@@ -57,6 +58,8 @@ patch_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 			touch modprobe.conf.5 &&
+
+			patch -Np1 -i $SOURCE/$PKG_DIR/${PACKAGE}-${VERSION}-modprobe-1.patch
 
 			sed -i 's@/lib/modules@/system/software/drivers@g' \
 				configure configure.in depmod.8 depmod.c \
@@ -79,11 +82,12 @@ configure_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-#			CFLAGS="-march=i386"
+			#./configure                 &&
+			#make check                  &&
+			#make distclean              &&
 			./configure \
 				--enable-zlib \
         	                --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
-#				--host=$CHOST --target=$CHOST &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
 	fi

@@ -8,15 +8,16 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=utils
 PACKAGE=coreutils
-VERSION=5.2.1
+VERSION=5.96
 ARCHIVE=tar.bz2
 UNZIP=-j
 
 URL=$RESOURCE_URL
 PKG_DIR=core/commands
 PKG=$PACKAGE-$VERSION.$ARCHIVE
-PATCH1=$PACKAGE-$VERSION-uname-2.patch
+PATCH1=$PACKAGE-$VERSION-uname-1.patch
 PATCH2=$PACKAGE-$VERSION-suppress_uptime_kill_su-1.patch
+PATCH3=$PACKAGE-$VERSION-i18n-1.patch
 
 DEST=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
 
@@ -39,9 +40,10 @@ main()
 
 prepare()
 {
-	download ${URL} ${PKG_DIR} ${PKG}
-	download ${URL} ${PKG_DIR} ${PATCH1}
-	download ${URL} ${PKG_DIR} ${PATCH2}
+	download ${URL} ${PKG_DIR} ${PKG}    &&
+	download ${URL} ${PKG_DIR} ${PATCH1} &&
+	download ${URL} ${PKG_DIR} ${PATCH2} &&
+	download ${URL} ${PKG_DIR} ${PATCH3} &&
 	mkdir -p $COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
 }
 
@@ -59,9 +61,14 @@ patch_package()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
-			cd $BUILD/$PACKAGE-$VERSION &&
+			cd $BUILD/$PACKAGE-$VERSION            &&
 			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1 &&
 			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH2 &&
+			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH3 &&
+
+			chmod +x tests/sort/sort-mb-tests      &&
+			sed -i 's/_LEN 6/_LEN 20/' src/who.c   &&
+
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
@@ -74,10 +81,8 @@ configure_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-#			CFLAGS="-march=i386"
-			DEFAULT_POSIX2_VERSION=199209 ./configure \
-        	                --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
-#				--host=$CHOST --target=$CHOST &&
+			#DEFAULT_POSIX2_VERSION=199209
+			./configure --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
 	fi
@@ -90,7 +95,7 @@ make_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make &&
+	        make                        &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
@@ -103,7 +108,7 @@ install_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make install &&
+			make install                &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi

@@ -8,15 +8,14 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=shell
 PACKAGE=bash
-VERSION=3.0
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=3.1
+ARCHIVE=tar.gz
+UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/commands
 PKG=$PACKAGE-$VERSION.$ARCHIVE
-PATCH1=$PACKAGE-$VERSION-fixes-3.patch
-PATCH2=$PACKAGE-$VERSION-avoid_WCONTINUED-1.patch
+PATCH1=$PACKAGE-$VERSION-fixes-8.patch
 
 DEST=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
 
@@ -41,7 +40,6 @@ prepare()
 {
 	download ${URL} ${PKG_DIR} ${PKG}
 	download ${URL} ${PKG_DIR} ${PATCH1}
-	download ${URL} ${PKG_DIR} ${PATCH2}
     mkdir -p $COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
 }
 
@@ -61,7 +59,6 @@ patch_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1 &&
-			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH2 &&
 
 			sed -i 's|/etc|/local/settings/lsb|g' `grep -l -R "/etc" *` &&
 			sed -i 's|/dev|/system/devices|g' `grep -l -R "/dev" *` &&
@@ -77,13 +74,11 @@ configure_package()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE ]
 		then
-			cd $BUILD/$PACKAGE-$VERSION &&
-#			CFLAGS="-march=i386"
+			cd $BUILD/$PACKAGE-$VERSION   &&
 			./configure \
-				--without-bash-malloc \
-				--with-installed-readline \
-        	                --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
-#				--host=$CHOST --target=$CHOST &&
+                --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION \
+				--without-bash-malloc                              \
+				--with-installed-readline &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
 	fi
@@ -96,7 +91,7 @@ make_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make &&
+			make &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
@@ -109,7 +104,7 @@ install_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make install &&
+	       	make install &&
 			ln -s bash $DEST/bin/sh &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi

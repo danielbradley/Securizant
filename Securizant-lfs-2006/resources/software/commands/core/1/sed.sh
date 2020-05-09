@@ -5,9 +5,9 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=text_processing
 PACKAGE=sed
-VERSION=4.1.4
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=4.1.5
+ARCHIVE=tar.gz
+UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/commands

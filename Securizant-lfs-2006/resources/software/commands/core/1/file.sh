@@ -8,9 +8,9 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=file
 PACKAGE=file
-VERSION=4.13
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=4.17
+ARCHIVE=tar.gz
+UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/commands

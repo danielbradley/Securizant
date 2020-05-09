@@ -26,6 +26,8 @@ BUILD=/mnt/build/features/development/libraries
 
 main()
 {
+	return
+
 	echo Scripting $PACKAGE-$VERSION &&
 	prepare &&
 	unpack_package &&

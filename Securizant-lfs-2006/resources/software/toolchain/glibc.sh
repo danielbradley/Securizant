@@ -15,10 +15,9 @@ UNZIP=-j
 URL=$RESOURCE_URL
 PKG_DIR=core/toolchain
 PKG=$PACKAGE-$VERSION.$ARCHIVE
-#PKG2=$PACKAGE-linuxthreads-$VERSION.$ARCHIVE
-#PATCH1=glibc-2.3.4-rtld_search_dirs-1.patch
-#PATCH2=glibc-2.3.4-fix_test-1.patch
-#PATCH3=glibc-2.3.4-tls_assert-1.patch
+PKG2=$PACKAGE-libidn-$VERSION.$ARCHIVE
+PATCH1=$PACKAGE-$VERSION-linux_types-1.patch
+PATCH2=$PACKAGE-$VERSION-inotify-1.patch
 
 SOURCE=/mnt/source
 BUILD=/mnt/build/toolchain
@@ -35,39 +34,27 @@ echo "URL: $URL"
 main()
 {
 	echo "URL2: $URL"
-	copy_kernel_headers &&
-	setup &&
-	unpack_package &&
-	apply_patches &&
-	configure_source &&
-	compile_source &&
-	install_package &&
-	install_locales &&
-	activate_package &&
-	complete &&
+	setup               &&
+	unpack_package      &&
+	apply_patches       &&
+	configure_source    &&
+	compile_source      &&
+	install_package     &&
+	install_locales     &&
+	activate_package    &&
+	complete            &&
 #	overwrite_ldsoconf
 	echo
-}
-
-copy_kernel_headers()
-{
-	if [ ! -d /system/software/source/linux/include/asm ]
-	then
-		mkdir -p /system/software/source/linux/include/asm
-		cp -Rf /tools/include/asm         /system/software/source/linux/include
-		cp -Rf /tools/include/linux       /system/software/source/linux/include
-		chown -R 100:1000 /system/software/source/linux
-	fi
 }
 
 setup()
 {
 	echo "URL3: $URL"
 	download ${URL} ${PKG_DIR} ${PKG}
-	#download ${URL} ${PKG_DIR} ${PKG2}
-	#download ${URL} ${PKG_DIR} ${PATCH1}
-	#download ${URL} ${PKG_DIR} ${PATCH2}
-	#download ${URL} ${PKG_DIR} ${PATCH3}
+	download ${URL} ${PKG_DIR} ${PKG2}
+
+	download ${URL} ${PKG_DIR} ${PATCH1}
+	download ${URL} ${PKG_DIR} ${PATCH2}
 
 	mkdir -p /system/software/runtimes/GNU/${PACKAGE}-${VERSION}/etc
 	touch /system/software/runtimes/GNU/${PACKAGE}-${VERSION}/etc/ld.so.conf
@@ -77,8 +64,8 @@ unpack_package()
 {
 	if [ ! -d $BUILD/$PACKAGE-$VERSION ]
 	then
-		tar -C $BUILD -xvf $SOURCE/${PKG_DIR}/${PKG} $UNZIP
-		#tar -C $BUILD/$PACKAGE-$VERSION -xvf $SOURCE/${PKG_DIR}/${PKG2} $UNZIP
+		tar -C $BUILD                   -xvf $SOURCE/${PKG_DIR}/${PKG}  $UNZIP
+		tar -C $BUILD/$PACKAGE-$VERSION -xvf $SOURCE/${PKG_DIR}/${PKG2} $UNZIP
 	fi
 }
 
@@ -89,9 +76,13 @@ apply_patches()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			#patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH1}
-			#patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH2}
-			#patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH3}
+			patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH1}
+			patch -Np1 -i $SOURCE/${PKG_DIR}/${PATCH2}
+
+			sed -i '/vi_VN.TCVN/d' localedata/SUPPORTED
+
+			sed -i 's|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=/lib/ld-linux.so.2 -o|' \
+		        scripts/test-installation.pl
 
 			# Modify paths.h
 			

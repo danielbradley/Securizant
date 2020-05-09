@@ -8,9 +8,9 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=file
 PACKAGE=findutils
-VERSION=4.2.23
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=4.2.27
+ARCHIVE=tar.gz
+UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/commands

@@ -86,7 +86,7 @@ make_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make &&
+	        make                        &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
@@ -98,14 +98,14 @@ install_package()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 		then
-			cd $BUILD/$PACKAGE-$VERSION &&
-	                make install &&
-			chmod -v 755 $DEST/lib/*.5.4 &&
-			chmod -v 644 $DEST/lib/libncurses++.a &&
-			ln -s ncurses/ncurses.h $DEST/include &&
-			ln -s ncurses.h $DEST/include/curses.h &&
-			ln -s libncurses.so $DEST/lib/libcurses.so &&
-			ln -s libncurses.a  $DEST/lib/libcurses.a &&
+			cd $BUILD/$PACKAGE-$VERSION                 &&
+            make install                                &&
+			chmod -v 755 $DEST/lib/*.5.4                &&
+			chmod -v 644 $DEST/lib/libncurses++.a       &&
+			ln -sf ncurses/ncurses.h $DEST/include      &&
+			ln -sf ncurses.h $DEST/include/curses.h     &&
+			ln -sf libncurses.so $DEST/lib/libcurses.so &&
+			ln -sf libncurses.a  $DEST/lib/libcurses.a  &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi

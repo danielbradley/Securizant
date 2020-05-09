@@ -16,8 +16,6 @@ UNZIP=-j
 URL=$RESOURCE_URL
 PKG_DIR=core/toolchain
 PKG=$PACKAGE-$VERSION.$ARCHIVE
-PATCH1=$PACKAGE-$VERSION-no_fixincludes-1.patch
-PATCH2=$PACKAGE-$VERSION-linkonce-1.patch
 
 SOURCE=/mnt/source
 BUILD=/mnt/build/toolchain
@@ -37,15 +35,13 @@ main()
 	configure_source &&
 	compile_source &&
 	install_package &&
-	modify_package &&
+#	modify_package &&
 	complete
 }
 
 setup()
 {
 	download ${URL} ${PKG_DIR} ${PKG}
-	download ${URL} ${PKG_DIR} ${PATCH1}
-	download ${URL} ${PKG_DIR} ${PATCH2}
 }
 
 unpack_package()
@@ -63,9 +59,10 @@ apply_patches()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCH ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1 &&
-			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH2 &&
-			sed -i 's/install_to_$(INSTALL_DEST) //' libiberty/Makefile.in &&
+			sed -i 's/install_to_$(INSTALL_DEST) //'       libiberty/Makefile.in &&
+			sed -i 's/^XCFLAGS =$/& -fomit-frame-pointer/'       gcc/Makefile.in &&
+			sed -i 's@\./fixinc\.sh@-c true@'                    gcc/Makefile.in &&
+			sed -i 's/@have_mktemp_command@/yes/'                gcc/gccbug.in   &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCH
 		fi
 	fi
@@ -83,7 +80,7 @@ configure_source()
 #			CFLAGS="-march=i386" CXXFLAGS="-march=i386" \
 			../$PACKAGE-$VERSION/configure \
 				--prefix=$GNU_BASE/$CATEGORY/$DNAME \
-				--libexecdir=/system/software/commands/development/gnu-3.4.3/libexec \
+				--libexecdir=/system/software/commands/development/gnu-${VERSION}/libexec \
 				--enable-shared \
 				--enable-threads=posix \
 				--enable-__cxa_atexit \
@@ -120,7 +117,7 @@ install_package()
 #			mkdir -p /system/software/libraries/gnu/g++-3.3.1/lib &&
 #                        cp /system/software/Applications/development/gnu-3.3.1/lib/libstdc++* \
 #                                /system/software/libraries/gnu/g++-3.3.1/lib &&
-			ln -s gcc $GNU_BASE/$CATEGORY/$DNAME/bin/cc &&
+			ln -sf gcc $GNU_BASE/$CATEGORY/$DNAME/bin/cc &&
 
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
@@ -129,14 +126,19 @@ install_package()
 
 modify_package()
 {
+	local GCC="$GNU_BASE/$CATEGORY/$DNAME/bin/gcc"
+	local FILENAME=`${GCC}  -print-libgcc-file-name`
+	local SPECFILEDIR=`dirname $FILENAME`
+	local SPECFILE="$SPECFILEDIR/specs"
+
 	if [ -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MODIFY ]
 		then
 			cd $BUILD/$PACKAGE-build &&
-			local Gcc="$GNU_BASE/$CATEGORY/$DNAME/bin/gcc" &&
-			local Specfile=`${Gcc} --print-file specs` &&
-			sed -i 's@ /lib/ld-linux.so.2@ /system/software/lib/ld-linux.so.2@g' \
+			$GCC -dumpspecs > $SPECFILE
+
+			sed -i 's@^/lib/ld-linux.so.2@/system/software/lib/ld-linux.so.2@g' \
 				"$Specfile" &&
 			sed -i '/\*startfile_prefix_spec:/{n;s@.*@/system/software/lib/ @}' \
 				"$Specfile" &&

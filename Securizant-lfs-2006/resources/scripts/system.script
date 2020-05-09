@@ -97,6 +97,7 @@ change_file_ownerships()
 	chown system:users	/system/software/man/man?
 	chown system:users	/system/software/source
 	chown system:users	/system/software/source/linux
+	chown system:users	/system/software/source/linux/include
 
 	chown system:users	/system/software/X11R6
 	chown system:users	/system/software/X11R6/software

@@ -1,11 +1,12 @@
 #!/tools/bin/bash
 
 source /mnt/software/download.sh
+source /mnt/software/altersource.sh
 
 COMMAND_BASE=/system/software/commands
 CATEGORY=system
 PACKAGE=udev
-VERSION=056
+VERSION=096
 ARCHIVE=tar.bz2
 UNZIP=-j
 
@@ -53,12 +54,28 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			sed -i 's@/usr/bin/install@install@g' Makefile &&
-			sed -i 's/killall/echo killall/' Makefile &&
 
-			sed -i 's|/sys|/system/mounts/SYS|g' etc/init.d/udev.init.LSB &&
-			sed -i 's|/sys|/system/mounts/SYS|g' libsysfs/sysfs/libsysfs.h &&
+			#
+			#	Modify Makefile to not make assumptions
+			#
+			sed -i 's@/usr/bin/install@install@g' Makefile     &&
+			sed -i 's/killall/echo killall/'      Makefile     &&
 
+			#	overkill for now, use sed instead to
+			#	replace /sys in source files
+			#
+			#altersource "." "/sys" "/system/mounts/SYS" ".c"
+			sed -i 's|/sys|/system/mounts/SYS|g'  udev_sysfs.c &&
+
+			sed -i 's|/etc/passwd|/local/settings/users/passwd|g'   udev_libc_wrapper.c &&
+			sed -i 's|/etc/shadow|/local/settings/private/shadow|g' udev_libc_wrapper.c &&
+
+			#	use altersource to replace legacy assumptions in rules
+			#
+			#
+			altersource "etc" "/sys"     "/system/mounts/SYS"      ".rules" &&
+			altersource "etc" "/bish/sh" "/system/software/bin/sh" ".rules" &&
+			
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
@@ -83,7 +100,7 @@ make_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make prefix=$DEST udevdir=/system/devices &&
+	        make prefix=$DEST udevdir=/system/devices &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
@@ -96,7 +113,8 @@ install_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make prefix=$DEST udevdir=/system/devices install &&
+	        make prefix=$DEST udevdir=/system/devices install &&
+	        install -m644 -D -v docs/writing_udev_rules/index.html $DEST/share/doc/udev-096/index.html &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi

@@ -96,8 +96,8 @@ install_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 	        make install &&
-	        cp /etc/resolv.conf /local/settings/networks/meta/resolv.conf &&
-	        ln -s /local/settings/networks/meta/resolv.conf /local/settings/lsb/resolv.conf &&
+	        cp /etc/resolv.conf /local/settings/network/meta/resolv.conf &&
+	        ln -s /local/settings/network/meta/resolv.conf /local/settings/lsb/resolv.conf &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi
