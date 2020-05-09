@@ -9,8 +9,8 @@ LIBRARIES_BASE=/system/software/libraries
 CATEGORY=terminal
 PACKAGE=readline
 VERSION=5.1
-ARCHIVE=tar.bz2
-UNZIP=-j
+ARCHIVE=tar.gz
+UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/libraries
@@ -40,14 +40,14 @@ prepare()
 {
 	download ${URL} ${PKG_DIR} ${PKG}
 	download ${URL} ${PKG_DIR} ${PATCH1}
-        mkdir -p $LIBRARIES_BASE/$CATEGORY/$PACKAGE-$VERSION
+    mkdir -p $LIBRARIES_BASE/$CATEGORY/$PACKAGE-$VERSION
 }
 
 unpack_package()
 {
 	if [ ! -d $BUILD/$PACKAGE-$VERSION ]
 	then
-		tar -C $BUILD -jxvf $SOURCE/$PKG_DIR/$PKG
+		tar -C $BUILD -xvf $SOURCE/$PKG_DIR/$PKG $UNZIP
 	fi
 }
 
