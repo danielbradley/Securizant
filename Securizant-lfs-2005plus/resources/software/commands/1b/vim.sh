@@ -16,6 +16,7 @@ URL=$RESOURCE_URL
 PKG_DIR=core/commands
 PKG=$PACKAGE-$VERSION.$ARCHIVE
 PKG2=$PACKAGE-$VERSION-lang.$ARCHIVE
+PATCH1=$PACKAGE-$VERSION-security_fix-2.patch
 
 DEST=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
 
@@ -27,20 +28,20 @@ BUILD=/mnt/build/commands
 main()
 {
 	echo Scripting $PACKAGE-$VERSION &&
-	prepare &&
-	unpack_package &&
-	patch_package &&
-	configure_package &&
-	make_package &&
-	install_package &&
+	prepare                          &&
+	unpack_package                   &&
+	patch_package                    &&
+	configure_package                &&
+	make_package                     &&
+	install_package                  &&
 	complete
 }
 
 prepare()
 {
-	download ${URL} ${PKG_DIR} ${PKG}
-	download ${URL} ${PKG_DIR} ${PKG2}
-	download ${URL} ${PKG_DIR} ${PATCH1}
+	download ${URL} ${PKG_DIR} ${PKG}    &&
+	download ${URL} ${PKG_DIR} ${PKG2}   &&
+	download ${URL} ${PKG_DIR} ${PATCH1} &&
 	mkdir -p $COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
 }
 
@@ -48,8 +49,8 @@ unpack_package()
 {
 	if [ ! -d $BUILD/$PACKAGE-$VERSION ]
 	then
-		tar -C $BUILD -xvf $SOURCE/$PKG_DIR/$PKG  $UNZIP
-		tar -C $BUILD -xvf $SOURCE/$PKG_DIR/$PKG2 $UNZIP
+		tar -C $BUILD -xvf $SOURCE/$PKG_DIR/$PKG  $UNZIP &&
+		tar -C $BUILD -xvf $SOURCE/$PKG_DIR/$PKG2 $UNZIP &&
 		mv $BUILD/${PACKAGE}63 $BUILD/$PACKAGE-$VERSION
 	fi
 }
@@ -60,7 +61,7 @@ patch_package()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
-			cd $BUILD/$PACKAGE-$VERSION &&
+			cd $BUILD/$PACKAGE-$VERSION            &&
 			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1 &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
