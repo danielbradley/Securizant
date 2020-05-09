@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=terminal
 PACKAGE=less
-VERSION=384
+VERSION=394
 ARCHIVE=tar.gz
 UNZIP=-z
 
