@@ -56,7 +56,7 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			sed -i -e 's/-DTEST/$(ALL_CFLAGS) &/' lib/e2p/Makefile.in &&
+			#sed -i -e 's/-DTEST/$(ALL_CFLAGS) &/' lib/e2p/Makefile.in &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
@@ -71,11 +71,9 @@ configure_package()
 			cd $BUILD/$PACKAGE-$VERSION &&
 			mkdir -p $BUILD/$PACKAGE-$VERSION/build &&
 			cd build &&
-#			CFLAGS="-march=i386"
 			../configure \
-				--disable-evms \
-        	                --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
-#				--host=$CHOST --target=$CHOST &&
+                --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION \
+				--disable-evms &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
 	fi
@@ -89,7 +87,7 @@ make_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 			cd build &&
-			make &&
+			make     &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
@@ -102,9 +100,9 @@ install_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			cd build &&
-			make install      DESTDIR=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
-			make install-libs DESTDIR=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
+			cd build                    &&
+			make install                &&
+			make install-libs           &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi
