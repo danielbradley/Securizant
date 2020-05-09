@@ -5,9 +5,9 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=system
 PACKAGE=procps
-VERSION=3.2.5
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=3.2.6
+ARCHIVE=tar.gz
+UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/commands
@@ -80,7 +80,7 @@ make_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make SHARED=0 BINDIR=$DEST/bin DESTDIR=$DEST install="install -D" ldconfig=echo install &&
+	        make SHARED=0 BINDIR=$DEST/bin DESTDIR=$DEST install="install -D" ldconfig=echo install &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
