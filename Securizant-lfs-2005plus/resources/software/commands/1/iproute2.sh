@@ -8,13 +8,13 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=network
 PACKAGE=iproute2
-VERSION=2.6.16-060323
+VERSION=2.6.16
 ARCHIVE=tar.gz
 UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/commands
-PKG=$PACKAGE-$VERSION-050330.$ARCHIVE
+PKG=$PACKAGE-$VERSION-060323.$ARCHIVE
 PATCH1=$PACKAGE-$VERSION-szt1.patch
 
 DEST=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
@@ -27,18 +27,18 @@ BUILD=/mnt/build/commands
 main()
 {
 	echo Scripting $PACKAGE-$VERSION &&
-	prepare &&
-	unpack_package &&
-	patch_package &&
-	configure_package &&
-	make_package &&
-	install_package &&
+	prepare                          &&
+	unpack_package                   &&
+	patch_package                    &&
+	configure_package                &&
+	make_package                     &&
+	install_package                  &&
 	complete
 }
 
 prepare()
 {
-	download ${URL} ${PKG_DIR} ${PKG}
+	download ${URL} ${PKG_DIR} ${PKG} &&
 	#download ${URL} ${PKG_DIR} ${PATCH1}
 	mkdir -p $COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
 }
