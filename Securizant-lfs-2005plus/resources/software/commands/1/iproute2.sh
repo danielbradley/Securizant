@@ -15,7 +15,7 @@ UNZIP=-z
 URL=$RESOURCE_URL
 PKG_DIR=core/commands
 PKG=$PACKAGE-$VERSION.$ARCHIVE
-PATCH1=$PACKAGE-$VERSION-szt1.patch
+#PATCH1=$PACKAGE-$VERSION-szt1.patch
 
 DEST=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
 
@@ -58,8 +58,14 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			#sed -i '/^TARGETS/s@arpd@@g' misc/Makefile &&
-			#patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1 &&
+			sed -i "s|SBINDIR=/usr/sbin|SBINDIR=$DEST/sbin|"                                Makefile &&
+			sed -i "s|CONFDIR=/etc/iproute2|CONFDIR=/local/settings/network/meta/iproute2|" Makefile &&
+			sed -i "s|DOCDIR=/usr/share/doc/iproute2|DOCDIR=$DEST/share/doc/iproute2|"      Makefile &&
+			sed -i "s|MANDIR=/usr/share/man|MANDIR=$DEST/share/man|"                        Makefile &&
+			sed -i "s|DBM_INCLUDE:=/usr/include|DBM_INCLUDE:=/system/software/include|"     Makefile &&
+
+			sed -i "s|/etc/iproute2|/local/settings/network/meta/iproute2|g"                lib/rt_names.c &&
+
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
@@ -72,9 +78,6 @@ configure_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			#./configure \
-	        #    --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION \
-            #    --sysconfdir=/local/settings/networks/meta &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
 	fi
