@@ -9,7 +9,7 @@ COMMAND_BASE=/system/software/commands
 CATEGORY=file
 PACKAGE=findutils
 VERSION=4.2.27
-ARCHIVE=tar.bz
+ARCHIVE=tar.gz
 UNZIP=-z
 
 URL=$RESOURCE_URL
