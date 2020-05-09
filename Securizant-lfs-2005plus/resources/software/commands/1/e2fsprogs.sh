@@ -101,6 +101,7 @@ install_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 			cd build                    &&
+			mkdir -p $COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION/etc &&
 			make install                &&
 			make install-libs           &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
