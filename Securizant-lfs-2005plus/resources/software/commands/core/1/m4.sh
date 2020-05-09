@@ -8,9 +8,9 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=development
 PACKAGE=m4
-VERSION=1.4.3
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=1.4.4
+ARCHIVE=tar.gz
+UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/commands

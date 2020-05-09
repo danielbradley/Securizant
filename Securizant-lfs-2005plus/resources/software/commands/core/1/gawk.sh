@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=text_processing
 PACKAGE=gawk
-VERSION=3.1.4
+VERSION=3.1.5
 ARCHIVE=tar.bz2
 UNZIP=-j
 
