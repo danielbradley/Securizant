@@ -1,4 +1,4 @@
-NAME=Securizant-LFS-Core-2005.07
+NAME=Securizant-LFS-Core-2006.01
 
 RESOURCE_URL="http://cdn.securizant.org/resources/Securizant/2006/source"
 
@@ -23,8 +23,3 @@ SRC_GEN_DIR=$PROJECT_DIR/generated      # not used ??
 IMAGE_SPEC_DIR=$PROJECT_DIR/image_spec
 ROOT_SPEC_NAME=root.spec                # not used ??
 INITRD=/usr/mounts/INITRD
-
-#
-#  Tools image
-#
-#TOOLS_IMAGE_NAME=tools/lfstools-6.1.1.e2
