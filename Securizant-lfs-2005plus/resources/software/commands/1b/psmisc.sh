@@ -5,9 +5,9 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=system
 PACKAGE=psmisc
-VERSION=21.6
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=22.2
+ARCHIVE=tar.gz
+UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/commands
@@ -23,12 +23,12 @@ BUILD=/mnt/build/commands
 main()
 {
 	echo Scripting $PACKAGE-$VERSION &&
-	prepare &&
-	unpack_package &&
-	patch_package &&
+	prepare           &&
+	unpack_package    &&
+	patch_package     &&
 	configure_package &&
-	make_package &&
-	install_package &&
+	make_package      &&
+	install_package   &&
 	complete
 }
 
@@ -52,10 +52,14 @@ patch_package()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
-			cd $BUILD/$PACKAGE-$VERSION &&
-			sed -i 's|"/proc|"/system/processes|g' src/fuser.c
-			sed -i 's|"/proc|"/system/processes|g' src/killall.c
-			sed -i 's|"/proc|"/system/processes|g' src/pstree.c
+			cd $BUILD/$PACKAGE-$VERSION                                    &&
+			sed -i 's|"/proc|"/system/processes|g'          src/killall.c  &&
+			sed -i 's|"/proc|"/system/processes|g'          src/oldfuser.c &&
+			sed -i 's|"/proc|"/system/processes|g'          src/pstree.c   &&
+			sed -i 's|"/proc|"/system/processes|g'          src/fuser.c    &&
+
+			sed -i 's|/etc/mtab|/local/settings/lsb/mtab|g' src/fuser.c    &&
+
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
@@ -68,11 +72,9 @@ configure_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-#			CFLAGS="-march=i386"
 			CPPFLAGS=-I/system/software/include/ncurses \
 			./configure \
-        	                --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
-#				--host=$CHOST --target=$CHOST &&
+        	    --prefix=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
 	fi
