@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 LIBRARIES_BASE=/system/software/libraries
 CATEGORY=terminal
 PACKAGE=readline
-VERSION=5.0
+VERSION=5.1
 ARCHIVE=tar.bz2
 UNZIP=-j
 
