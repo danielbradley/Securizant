@@ -73,8 +73,6 @@ patch_package()
 			altersource "etc" "/sys"     "/system/mounts/SYS"      ".rules" &&
 			altersource "etc" "/bish/sh" "/system/software/bin/sh" ".rules" &&
 			
-			sed -i 's|/sys|/system/mounts/SYS|g' libsysfs/sysfs/libsysfs.h  &&
-
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
