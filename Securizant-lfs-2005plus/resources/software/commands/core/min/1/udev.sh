@@ -5,7 +5,7 @@ source /mnt/software/download.sh
 COMMAND_BASE=/system/software/commands
 CATEGORY=system
 PACKAGE=udev
-VERSION=056
+VERSION=096
 ARCHIVE=tar.bz2
 UNZIP=-j
 
@@ -83,7 +83,7 @@ make_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make prefix=$DEST udevdir=/system/devices &&
+	        make prefix=$DEST udevdir=/system/devices &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
@@ -96,7 +96,7 @@ install_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make prefix=$DEST udevdir=/system/devices install &&
+	        make prefix=$DEST udevdir=/system/devices install &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi
