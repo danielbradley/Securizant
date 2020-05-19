@@ -1,5 +1,9 @@
 timeout 10
 
+title Securizant LFS 2006 ISO 
+	kernel (cd)/Securizant/kernels/linux-2.6.11.12 root=/dev/ram ramdisk_size=100000 init=/linuxrc system_media=/dev/hdc osdir=/Securizant/POC/2006 udev=true verbose=true system=system.img
+	initrd (cd)/Securizant/POC/2006/boot.img
+
 title Securizant LFS 2005 ISO 
 	kernel (cd)/Securizant/kernels/linux-2.6.11.12 root=/dev/ram ramdisk_size=100000 init=/linuxrc system_media=/dev/hdc osdir=/Securizant/POC/2005 udev=true verbose=true system=system.img
 	initrd (cd)/Securizant/POC/2005/boot.img

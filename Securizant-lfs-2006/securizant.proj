@@ -1,4 +1,4 @@
-#NAME=Securizant-LFS-Core-2006.01
+NAME=Securizant-LFS-Core-2006.02
 
 RESOURCE_URL="http://cdn.securizant.org/resources/Securizant/2006/source"
 
@@ -7,7 +7,7 @@ TARGET=$BUILD/${NAME}
 PROFILE=dev.txt
 
 EDITION=POC
-RELEASE=2005
+RELEASE=2006
 
 #
 #  Project variables
