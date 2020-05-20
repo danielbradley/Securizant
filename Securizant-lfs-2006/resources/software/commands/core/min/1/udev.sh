@@ -73,8 +73,8 @@ patch_package()
 			#	use altersource to replace legacy assumptions in rules
 			#
 			#
-			altersource "etc" "/sys"     "/system/mounts/SYS"      ".rules" &&
-			altersource "etc" "/bish/sh" "/system/software/bin/sh" ".rules" &&
+			altersource "etc" "/sys"    "/system/mounts/SYS"      ".rules" &&
+			altersource "etc" "/bin/sh" "/system/software/bin/sh" ".rules" &&
 			
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
@@ -104,6 +104,8 @@ make_package()
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
+
+	bash
 }
 
 install_package()
