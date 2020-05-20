@@ -104,8 +104,6 @@ make_package()
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
-
-	bash
 }
 
 install_package()
@@ -120,6 +118,8 @@ install_package()
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi
+
+	/system/software/bin/bash
 }
 
 complete()
