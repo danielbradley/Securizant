@@ -127,7 +127,7 @@ mount_dev()
 
 	if [ "$udev" == "true" ]
 	then
-		${SYSTEM}/software/sbin/udevd
+		${SYSTEM}/software/sbin/udevstart
 		mkdir -p ${SYSTEM}/devices/pts
 		mount -n -t devpts -o gid=4,mode=620 devpts ${SYSTEM}/devices/pts
 		chown root:users ${SYSTEM}/devices/{ptmx,pts}

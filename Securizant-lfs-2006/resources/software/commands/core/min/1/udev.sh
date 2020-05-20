@@ -117,6 +117,8 @@ install_package()
 	        install -m644 -D -v docs/writing_udev_rules/index.html $DEST/share/doc/udev-096/index.html &&
 	        cp udevstart $DEST/sbin &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
+
+			exit -1
 		fi
 	fi
 }
