@@ -82,6 +82,7 @@ configure_source()
 				--prefix=$GNU_BASE/$CATEGORY/$DNAME \
 				--with-sysroot=/system/software \
 				--with-native-system-header-dir=/system/software/include \
+				--with-headers=/system/software/include \
 				--libexecdir=/system/software/commands/development/gnu-${VERSION}/libexec \
 				--enable-shared \
 				--enable-threads=posix \
