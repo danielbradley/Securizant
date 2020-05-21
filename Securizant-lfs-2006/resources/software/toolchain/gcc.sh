@@ -80,8 +80,8 @@ configure_source()
 #			CFLAGS="-march=i386" CXXFLAGS="-march=i386" \
 			../$PACKAGE-$VERSION/configure \
 				--prefix=$GNU_BASE/$CATEGORY/$DNAME \
-				--with-sysroot=/system/softwware/lib \
-				--with-native-system-header-dir=/system/software/lib \
+				--with-sysroot=/system/software \
+				--with-native-system-header-dir=include \
 				--libexecdir=/system/software/commands/development/gnu-${VERSION}/libexec \
 				--enable-shared \
 				--enable-threads=posix \
