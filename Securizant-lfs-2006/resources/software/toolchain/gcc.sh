@@ -89,9 +89,8 @@ configure_source()
 				--enable-__cxa_atexit \
 				--enable-clocale=gnu \
 				--enable-languages=c,c++ \
-				--with-local-prefix=/local/software \
+				--with-local-prefix=/local/software &&
 				#--target=i686-pc-linux-gnu         
-				&&
 #				--host=$CHOST --target=$CHOST
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
