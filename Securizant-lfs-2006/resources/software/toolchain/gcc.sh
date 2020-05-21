@@ -80,9 +80,9 @@ configure_source()
 #			CFLAGS="-march=i386" CXXFLAGS="-march=i386" \
 			../$PACKAGE-$VERSION/configure \
 				--prefix=$GNU_BASE/$CATEGORY/$DNAME \
-				--with-sysroot=/system/software \
+				#--with-sysroot=/system/software \
 				--with-native-system-header-dir=/system/software/include \
-				--with-headers=/system/software/include \
+				#--with-headers=/system/software/include \
 				--libexecdir=/system/software/commands/development/gnu-${VERSION}/libexec \
 				--enable-shared \
 				--enable-threads=posix \
@@ -90,7 +90,8 @@ configure_source()
 				--enable-clocale=gnu \
 				--enable-languages=c,c++ \
 				--with-local-prefix=/local/software \
-				--target=i686-pc-linux-gnu         &&
+				#--target=i686-pc-linux-gnu         
+				&&
 #				--host=$CHOST --target=$CHOST
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
