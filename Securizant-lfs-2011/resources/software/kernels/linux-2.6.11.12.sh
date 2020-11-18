@@ -49,10 +49,11 @@ main()
 
 prepare()
 {
-	download ${URL} ${PKG_DIR} ${PKG} &&
-	download ${URL} ${PKG2_DIR} ${PKG2} &&
-	download ${URL} ${PKG_DIR} ${PATCH1} &&
-	mkdir -p $BUILD/${PACKAGE}-${VERSION}-STATE &&
+	download ${URL} ${PKG_DIR} ${PKG}                 &&
+	download ${URL} ${PKG_DIR} linux-2.6.11.12.config &&
+	download ${URL} ${PKG2_DIR} ${PKG2}               &&
+	download ${URL} ${PKG_DIR} ${PATCH1}              &&
+	mkdir -p $BUILD/${PACKAGE}-${VERSION}-STATE       &&
 	return
 }
 
@@ -71,10 +72,12 @@ patch_package()
 	then
 		if [ ! -f $BUILD/${PACKAGE}-${VERSION}-STATE/SUCCESS.PATCHED ]
 		then
-			cd $BUILD/$PACKAGE-$VERSION &&
-			patch -Np1 -i $BUILD/squashfs-3.3/kernel-patches/linux-2.6.12/squashfs3.3-patch &&
-			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1 &&
+			cd $BUILD/$PACKAGE-$VERSION                                                         &&
+			patch -Np1 -i $BUILD/squashfs-3.3/kernel-patches/linux-2.6.12/squashfs3.3-patch     &&
+			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1                                              &&
 			sed -i 's@static int max_loop = 8@static int max_loop = 255@g' drivers/block/loop.c &&
+			cp .config  .config.dan.bak                                                         &&
+			cp $SOURCE/$PKG_DIR/linux-2.6.11.12.config .config                                  &&
 			touch $BUILD/${PACKAGE}-${VERSION}-STATE/SUCCESS.PATCHED
 		fi
 	fi

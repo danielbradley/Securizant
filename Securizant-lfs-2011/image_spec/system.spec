@@ -1,4 +1,4 @@
-<image name="system.e2" mountpoint="/system" mountflags="loop" fs="ext2" script="scripts/system.script" size="500">
+<image name="system.e2" mountpoint="/system" mountflags="loop" fs="ext2" script="scripts/system.script" size="1000">
 <dir path="/accounts/application"/>
 <dir path="/accounts/commands"/>
 <dir path="/accounts/guest"/>
