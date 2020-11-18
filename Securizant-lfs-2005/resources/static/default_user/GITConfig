@@ -1,0 +1,7 @@
+[http]
+	sslcainfo=/local/settings/system/ssl/certs/ca-certificates.crt
+	sslcapath=/local/settings/system/ssl/certs
+
+[user]
+	email = i.am.root@here
+	name = I am root

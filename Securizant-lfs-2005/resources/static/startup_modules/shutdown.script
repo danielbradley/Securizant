@@ -139,6 +139,8 @@ unmount_local_partition()
 	local DEVICE=`echo "$MOUNT_INFO" | cut -f 1 -d' '`
 	if [ -n "$MOUNT_INFO" -a -n "$DEVICE" ]
 	then
+		echo "" > /local/settings/lsb/mtab
+
 		umount -d /local
 		if [ $? -ne 0 ]
 		then

@@ -65,6 +65,10 @@ change_file_ownerships()
 	chown system:users	/system/default/settings/software
 	chown system:users	/system/default/settings/system
 	chown system:users	/system/default/settings/system/meta
+	chown system:users	/system/default/settings/system/ssl
+	chown system:users	/system/default/settings/system/ssl/certs
+	chown system:users	/system/default/settings/system/ssl/certs/ca-certificates.crt
+
 	chown system:users	/system/default/settings/users
 	chown system:users	/system/default/settings/users/*
 	chown system:users	/system/default/settings/users/meta
@@ -76,6 +80,7 @@ change_file_ownerships()
 	chown system:users	/system/default/data/_system/lib
 	chown system:users	/system/default/data/_system/log
 	chown system:users	/system/default/data/_system/run
+	chown root:root		/system/default/data/_system/empty
 
 	chown system:users	/system/features
 
