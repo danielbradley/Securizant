@@ -9,6 +9,7 @@ system	commands/core/min/1	commands
 system	commands/core/1		commands
 system	commands/1		commands
 system	commands/1b		commands
+system  commands/2      commands
 
 system	services		services
 
