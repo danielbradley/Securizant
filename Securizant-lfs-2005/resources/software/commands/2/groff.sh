@@ -5,7 +5,7 @@
 
 source /mnt/software/download.sh
 
-COMMAND_BASE=/system/features/development/software/commands
+COMMAND_BASE=/system/software/commands
 CATEGORY=text_processing
 PACKAGE=groff
 VERSION=1.19.1
@@ -13,7 +13,7 @@ ARCHIVE=tar.bz2
 UNZIP=-j
 
 URL=$RESOURCE_URL
-PKG_DIR=development/commands
+PKG_DIR=commands
 PKG=$PACKAGE-$VERSION.$ARCHIVE
 
 DEST=$COMMAND_BASE/$CATEGORY/$PACKAGE-$VERSION
