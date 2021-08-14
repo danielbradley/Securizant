@@ -117,7 +117,7 @@ apply_patches()
 			sed -i 's@/usr/share/man@/system/software/share/man@g' sysdeps/unix/sysv/linux/paths.h &&
 			sed -i 's@/boot/vmlinux@/system/software/kernels/linux-kernel@g' sysdeps/unix/sysv/linux/paths.h &&
 
-			sed -i 's@/bin/sh@/system/software/bin/sh@g' elf/Makefile &&
+			#sed -i 's@/bin/sh@/system/software/bin/sh@g' elf/Makefile &&
 			sed -i 's@/bin/sh@/system/software/bin/sh@g' libio/iopopen.c &&
 			sed -i 's@/bin/sh@/system/software/bin/sh@g' libio/oldiopopen.c &&
 
