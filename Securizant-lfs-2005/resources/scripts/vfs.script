@@ -58,7 +58,7 @@ redirect_bin()
 	if [ -d /bin ]
 	then
 		rm -rf /bin
-		ln -s system/software/bin bin 
+		#ln -s system/software/bin bin 
 	fi
 }
 

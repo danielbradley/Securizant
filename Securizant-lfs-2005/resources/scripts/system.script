@@ -319,7 +319,7 @@ redirect_usr_bin()
 	if [ -d /usr/bin ]
 	then
 		rm -rf /usr
-		ln -s system/software usr
+		#ln -s system/software usr
 	fi
 }
 
