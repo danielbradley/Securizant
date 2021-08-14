@@ -57,15 +57,6 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION                             &&
-			sed -i 's@-is@&R@g' configure                           &&
-			sed -i 's@MANPATH./usr/man@#&@g' src/man.conf.in        &&
-			sed -i 's@/usr@@' configure                             &&
-			sed -i 's#/usr/bin#@bindir@#' man2html/Makefile.in      &&
-			altersource . "/bin/cat"   "/system/software/bin/cat"   &&
-			altersource . "/bin/less"  "/system/software/bin/less"  &&
-			altersource . "/bin/nroff" "/system/software/bin/nroff" &&
-			altersource . "/bin/sh"    "/system/software/bin/sh"    &&
-			altersource . "/bin/tbl"   "/system/software/bin/tbl"   &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
