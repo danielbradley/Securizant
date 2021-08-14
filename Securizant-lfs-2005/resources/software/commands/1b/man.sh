@@ -60,6 +60,17 @@ patch_package()
 			sed -i 's@MANPATH./usr/man@#&@g' src/man.conf.in &&
 			sed -i 's@/usr@@' configure &&
 			sed -i 's#/usr/bin#@bindir@#' man2html/Makefile.in &&
+			sed -i 's#/bin/sh#/system/software/bin/sh#' configure &&
+			sed -i 's#/bin/sh#/system/software/bin/sh#' man2html/scripts/cgi-bin/man/mansearch &&
+			sed -i 's#/bin/sh#/system/software/bin/sh#' man2html/scripts/cgi-bin/man/mansearchhelp &&
+			sed -i 's#/bin/sh#/system/software/bin/sh#' man2html/scripts/cgi-bin/man/man2html &&
+			sed -i 's#/bin/sh#/system/software/bin/sh#' man2html/hman.sh &&
+			sed -i 's#/bin/sh#/system/software/bin/sh#' msgs/gencat207fix.sh &&
+			sed -i 's#/bin/sh#/system/software/bin/sh#' msgs/inst.sh &&
+			sed -i 's#/bin/sh#/system/software/bin/sh#' src/man2dvi &&
+			sed -i 's#/bin/sh#/system/software/bin/sh#' src/mwi &&
+			sed -i 's#/bin/sh#/system/software/bin/sh#' src/apropos.sh &&
+			sed -i 's#/bin/sh#/system/software/bin/sh#' src/makewhatis.sh &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
