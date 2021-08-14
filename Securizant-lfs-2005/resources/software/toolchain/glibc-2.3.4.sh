@@ -117,9 +117,13 @@ apply_patches()
 			sed -i 's@/usr/share/man@/system/software/share/man@g' sysdeps/unix/sysv/linux/paths.h &&
 			sed -i 's@/boot/vmlinux@/system/software/kernels/linux-kernel@g' sysdeps/unix/sysv/linux/paths.h &&
 
+			sed -i 's@/bin/sh@/system/software/bin/sh@g' elf/Makefile &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g' libio/iopopen.c &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g' libio/oldiopopen.c &&
+
 			# Nuke-style modification of everything else
 			
-			local Dev="`find . -name "*.c"` `find . -name "*.h"`"
+			local Dev="`find . -name "*.c"` `find . -name "*.h"`" &&
 			local Etc=`grep -l -R "/etc"  *` &&
 			local Var=`grep -l -R "/var"  *` &&
 			local Pro=`grep -l -R "/proc" *` &&
