@@ -57,7 +57,8 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			altersource . "/bin/sh" "/system/software/bin/sh" &&
+			altersource . "/bin/sh"  "/system/software/bin/sh"  &&
+			altersource . "/bin/cat" "/system/software/bin/cat" &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
