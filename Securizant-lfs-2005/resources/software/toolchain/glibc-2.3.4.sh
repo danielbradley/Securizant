@@ -98,28 +98,41 @@ apply_patches()
 			
 			#altersource . "/bin/sh" "/system/software/bin/sh" &&
 
-			sed -i 's@/etc@/local/settings/lsb@g' sysdeps/unix/sysv/linux/paths.h &&
-			sed -i 's@/var@/local/data/_system@g' sysdeps/unix/sysv/linux/paths.h &&
-
-			sed -i 's@/usr/bin@!!!BINDIR!!!@g' sysdeps/unix/sysv/linux/paths.h &&
-			sed -i 's@/usr/sbin@!!!SBINDIR!!!!@g' sysdeps/unix/sysv/linux/paths.h &&
-
-			sed -i 's@/bin@!!!BINDIR!!!@g' sysdeps/unix/sysv/linux/paths.h &&
-			sed -i 's@/sbin@!!!SBINDIR!!!@g' sysdeps/unix/sysv/linux/paths.h &&
-
-			sed -i 's@!!!BINDIR!!!@/system/software/bin@g' sysdeps/unix/sysv/linux/paths.h &&
-			sed -i 's@!!!SBINDIR!!!@/system/software/sbin@g' sysdeps/unix/sysv/linux/paths.h &&
-
-#			sed -i 's@/dev/@/system/devices/@g' sysdeps/unix/sysv/linux/paths.h &&
-			sed -i 's@/tmp@/system/mounts/TEMP@g' sysdeps/unix/sysv/linux/paths.h &&
-			sed -i 's@/proc/@/system/processes/@g' sysdeps/unix/sysv/linux/paths.h &&
-
-			sed -i 's@/usr/share/man@/system/software/share/man@g' sysdeps/unix/sysv/linux/paths.h &&
 			sed -i 's@/boot/vmlinux@/system/software/kernels/linux-kernel@g' sysdeps/unix/sysv/linux/paths.h &&
+			sed -i 's@/bin@!!!BINDIR!!!@g'                                   sysdeps/unix/sysv/linux/paths.h &&
+#			sed -i 's@/dev/@/system/devices/@g'                              sysdeps/unix/sysv/linux/paths.h &&
+			sed -i 's@/etc@/local/settings/lsb@g'                            sysdeps/unix/sysv/linux/paths.h &&
+			sed -i 's@/proc/@/system/processes/@g'                           sysdeps/unix/sysv/linux/paths.h &&
+			sed -i 's@/tmp@/system/mounts/TEMP@g'                            sysdeps/unix/sysv/linux/paths.h &&
+			sed -i 's@/sbin@!!!SBINDIR!!!@g'                                 sysdeps/unix/sysv/linux/paths.h &&
+			sed -i 's@/usr/bin@!!!BINDIR!!!@g'                               sysdeps/unix/sysv/linux/paths.h &&
+			sed -i 's@/usr/sbin@!!!SBINDIR!!!!@g'                            sysdeps/unix/sysv/linux/paths.h &&
+			sed -i 's@/var@/local/data/_system@g'                            sysdeps/unix/sysv/linux/paths.h &&
+			sed -i 's@/usr/share/man@/system/software/share/man@g'           sysdeps/unix/sysv/linux/paths.h &&
 
-			sed -i 's@/bin/sh@/system/software/bin/sh@g' elf/Makefile &&
-			sed -i 's@/bin/sh@/system/software/bin/sh@g' libio/iopopen.c &&
-			sed -i 's@/bin/sh@/system/software/bin/sh@g' libio/oldiopopen.c &&
+			sed -i 's@!!!BINDIR!!!@/system/software/bin@g'                   sysdeps/unix/sysv/linux/paths.h &&
+			sed -i 's@!!!SBINDIR!!!@/system/software/sbin@g'                 sysdeps/unix/sysv/linux/paths.h &&
+
+			sed -i 's@/boot/vmlinux@/system/software/kernels/linux-kernel@g' sysdeps/generic/paths.h         &&
+			sed -i 's@/bin@!!!BINDIR!!!@g'                                   sysdeps/generic/paths.h         &&
+#			sed -i 's@/dev/@/system/devices/@g'                              sysdeps/generic/paths.h         &&
+			sed -i 's@/etc@/local/settings/lsb@g'                            sysdeps/generic/paths.h         &&
+			sed -i 's@/proc/@/system/processes/@g'                           sysdeps/generic/paths.h         &&
+			sed -i 's@/tmp@/system/mounts/TEMP@g'                            sysdeps/generic/paths.h         &&
+			sed -i 's@/sbin@!!!SBINDIR!!!@g'                                 sysdeps/generic/paths.h         &&
+			sed -i 's@/usr/bin@!!!BINDIR!!!@g'                               sysdeps/generic/paths.h         &&
+			sed -i 's@/usr/sbin@!!!SBINDIR!!!!@g'                            sysdeps/generic/paths.h         &&
+			sed -i 's@/var@/local/data/_system@g'                            sysdeps/generic/paths.h         &&
+			sed -i 's@/usr/share/man@/system/software/share/man@g'           sysdeps/generic/paths.h         &&
+
+			sed -i 's@!!!BINDIR!!!@/system/software/bin@g'                   sysdeps/unix/sysv/linux/paths.h &&
+			sed -i 's@!!!SBINDIR!!!@/system/software/sbin@g'                 sysdeps/unix/sysv/linux/paths.h &&
+
+			sed -i 's@/bin/sh@/system/software/bin/sh@g'                     Makefile                        &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g'                     elf/Makefile                    &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g'                     libio/iopopen.c                 &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g'                     libio/oldiopopen.c              &&
+			sed -i 's@/bin/sh@/system/software/bin/sh@g'                     sysdeps/posix/system.c          &&
 
 			# Nuke-style modification of everything else
 			
