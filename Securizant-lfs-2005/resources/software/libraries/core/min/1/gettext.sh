@@ -4,6 +4,7 @@
 #
 
 source /mnt/software/download.sh
+source /mnt/software/altersource.sh
 
 LIBRARIES_BASE=/system/software/libraries
 CATEGORY=i18n
@@ -64,6 +65,7 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
+			altersource . "/bin/sh" "/system/software/bin/sh"
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
