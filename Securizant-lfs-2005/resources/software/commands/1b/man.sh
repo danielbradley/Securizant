@@ -72,6 +72,7 @@ configure_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 #			CFLAGS="-march=i386"
+			echo $PATH
 			mv /bin /xbin &&
 			./configure -confdir=/local/settings/software/commands/man \
 				-prefix=$DEST \
