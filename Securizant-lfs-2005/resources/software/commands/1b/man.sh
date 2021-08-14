@@ -56,9 +56,10 @@ patch_package()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
-			cd $BUILD/$PACKAGE-$VERSION                             &&
-			sed -i 's@-is@&R@g' configure                           &&
-			sed -i 's@MANPATH./usr/man@#&@g' src/man.conf.in        &&
+			cd $BUILD/$PACKAGE-$VERSION                         &&
+			sed -i 's@-is@&R@g'                 configure       &&
+			sed -i 's@PREPATH=/bin:@PREPATH=@g' configure       &&
+			sed -i 's@MANPATH./usr/man@#&@g'    src/man.conf.in &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
@@ -72,15 +73,12 @@ configure_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 #			CFLAGS="-march=i386"
-			echo $PATH
-			mv /bin /xbin &&
 			./configure -confdir=/local/settings/software/commands/man \
 				-prefix=$DEST \
 				-bindir=$DEST/bin \
 				-mandir=$DEST/man \
 				-sbindir=$DEST/sbin &&
 #				--host=$CHOST --target=$CHOST &&
-			mv /xbin /bin &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 
 		fi
