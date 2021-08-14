@@ -4,6 +4,7 @@
 #
 
 source /mnt/software/download.sh
+source /mnt/software/altersource.sh
 
 CATEGORY=toolchain
 
@@ -95,6 +96,8 @@ apply_patches()
 
 			# Modify paths.h
 			
+			altersource . "/bin/sh" "/system/software/bin/sh" &&
+
 			sed -i 's@/etc@/local/settings/lsb@g' sysdeps/unix/sysv/linux/paths.h &&
 			sed -i 's@/var@/local/data/_system@g' sysdeps/unix/sysv/linux/paths.h &&
 
