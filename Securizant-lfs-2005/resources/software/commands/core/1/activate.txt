@@ -7,5 +7,6 @@ file/grep
 file/tar
 text_processing/gawk
 text_processing/sed
+system/procps
 utils/mktemp
 

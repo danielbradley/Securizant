@@ -4,7 +4,6 @@ filesystem/squashfs
 help/man
 help/texinfo
 network/wget
-system/procps
 system/psmisc
 text_editors/nano
 text_editors/vim
