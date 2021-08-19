@@ -81,7 +81,7 @@ make_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make SHARED=0 BINDIR=$DEST/bin usr/bin=$DEST/bin DESTDIR=$DEST install="install -D" ldconfig=echo install &&
+	                make SHARED=0 BINDIR=$DEST/bin DESTDIR=$DEST install="install -D" ldconfig=echo install &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
