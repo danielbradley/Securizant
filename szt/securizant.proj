@@ -9,7 +9,7 @@ NAME=Securizant-LFS-Core-2005.07
 TARGET=$BUILD/${NAME}
 PROFILE=dev.txt
 
-BOS_VERSION=6.1.1
+BOS_VERSION=2005.11-6.1.1
 EDITION=POC                     #   Used in X0_CreateISO.sh
 RELEASE=2005                    #   to specify disk image folder path.
 
