@@ -5,3 +5,6 @@
 [user]
 	email = i.am.root@here
 	name = I am root
+
+[core]
+	fscache = false
