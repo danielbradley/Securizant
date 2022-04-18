@@ -1,27 +1,30 @@
-NAME=Securizant-LFS-Core-2005.07
-
+#BOS_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source"
+#SZT_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source"
 RESOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source"
 
 BUILD=/local/bos/target
+NAME=Securizant-LFS-Core-2005.07
+
+#TOOLS=$BUILD/tools
 TARGET=$BUILD/${NAME}
 PROFILE=dev.txt
 
-EDITION=POC
-RELEASE=2005
+BOS_VERSION=6.1.1
+EDITION=POC                     #   Used in X0_CreateISO.sh
+RELEASE=2005                    #   to specify disk image folder path.
 
 #
 #  Project variables
 #
 
-PROC_DIR=usr/processes
 SYSTEM_BASE=/system
 SOFTWARE_BASE=/system/software
-SYSDATA_BASE=/local
+#SYSDATA_BASE=/local
 
 RESOURCE_DIR=$PROJECT_DIR/resources
-SRC_GEN_DIR=$PROJECT_DIR/generated      # not used ??
+#SRC_GEN_DIR=$PROJECT_DIR/generated      # not used ??
 IMAGE_SPEC_DIR=$PROJECT_DIR/image_spec
-ROOT_SPEC_NAME=root.spec                # not used ??
+#ROOT_SPEC_NAME=root.spec                # not used ??
 INITRD=/usr/mounts/INITRD
 
 #
