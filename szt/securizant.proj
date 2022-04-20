@@ -1,5 +1,5 @@
-#BOS_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source"
-#SZT_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source"
+BOS_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source"
+SZT_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source"
 RESOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source"
 
 BUILD=/local/bos/target
