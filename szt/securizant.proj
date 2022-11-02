@@ -13,6 +13,8 @@ BOS_VERSION=2005.11-6.1.1
 EDITION=POC                     #   Used in X0_CreateISO.sh
 RELEASE=2005                    #   to specify disk image folder path.
 
+TOOLS_IMAGE_NAME=tools/lfstools-${BOS_VERSION}.e2
+
 #
 #  Project variables
 #
