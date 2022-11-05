@@ -1,5 +1,6 @@
 #!/system/software/bin/bash
 
+EDITION="2006"
 REFORMAT="false"
 DEVICE="false"
 RECHECKOUT="false"
@@ -124,8 +125,8 @@ function recheckout()
         rm    -rf /local/bos/checkouts                                     &&
         mkdir -p  /local/bos/checkouts                                     &&
         cd /local/bos/checkouts                                            &&
-        git clone -b next https://github.com/danielbradley/BOS.git         &&
-        git clone -b next https://github.com/danielbradley/Securizant.git
+        git clone -b "$EDITION" https://github.com/danielbradley/BOS.git   &&
+        git clone -b "$EDITION" https://github.com/danielbradley/Securizant.git
     fi
 }
 
