@@ -1,0 +1,4 @@
+#!/system/software/bin/bash
+
+cat /system/processes/mounts
+
