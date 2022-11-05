@@ -105,6 +105,7 @@ install_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 	                make install &&
+			sed -i 's|#PermitRootLogin prohibit-password|PermitRootLogin yes|' /local/settings/services/sshd &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
 	fi
