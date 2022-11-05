@@ -77,6 +77,7 @@ change_file_ownerships()
 	chown system:users	/system/default/software
 	chown system:users	/system/default/data
 	chown system:users	/system/default/data/_system
+	chown root:root		/system/default/data/_system/empty
 	chown system:users	/system/default/data/_system/lib
 	chown system:users	/system/default/data/_system/log
 	chown system:users	/system/default/data/_system/run
