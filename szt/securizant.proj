@@ -1,15 +1,15 @@
-BOS_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source"
-SZT_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source"
-  RESOURCE_URL="http://cdn.securizant.org/resources/Securizant/2005/source" # deprecated
+BOS_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2006/source"
+SZT_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2006/source"
+  RESOURCE_URL="http://cdn.securizant.org/resources/Securizant/2006/source" # deprecated
 
 BUILD=/local/bos/target
-NAME=Securizant-LFS-Core-2005
+NAME=Securizant-LFS-Core-2006
 
 #TOOLS=$BUILD/tools
 TARGET=$BUILD/${NAME}
 PROFILE=dev.txt
 
-BOS_VERSION=2005.11-6.1.1
+BOS_VERSION=2006.08-6.2
 EDITION=POC                     #   Used in X0_CreateISO.sh
 RELEASE=2005                    #   to specify disk image folder path.
 
