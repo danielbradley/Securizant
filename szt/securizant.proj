@@ -10,8 +10,8 @@ TARGET=$BUILD/${NAME}
 PROFILE=dev.txt
 
 BOS_VERSION=2006.08-6.2
-EDITION=POC                     #   Used in X0_CreateISO.sh
-RELEASE=2005                    #   to specify disk image folder path.
+EDITION=LFS                     #   Used in X0_CreateISO.sh
+RELEASE=2006                    #   to specify disk image folder path.
 
 TOOLS_IMAGE_NAME=tools/lfstools-${BOS_VERSION}.e2
 
