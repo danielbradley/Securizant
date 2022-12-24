@@ -33,6 +33,7 @@ echo "URL: $URL"
 
 main()
 {
+	setup            &&
 	unpack_package   &&
 	apply_patches    &&
 	configure_source &&
@@ -40,6 +41,12 @@ main()
 	install_package  &&
 	complete         &&
 	echo
+}
+
+setup()
+{
+	echo "URL3: $URL"
+	download ${URL} ${PKG_DIR} ${PKG}
 }
 
 unpack_package()
