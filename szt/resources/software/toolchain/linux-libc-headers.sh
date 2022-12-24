@@ -60,7 +60,7 @@ unpack_package()
 
 apply_patches()
 {
-	if [ -f $BUILD/$PACKAGE-$VERSION/configure ]
+	if [ -f $BUILD/$PACKAGE-$VERSION/doc ]
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
@@ -69,7 +69,6 @@ apply_patches()
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
-	return 0
 }
 
 configure_source()
@@ -100,10 +99,10 @@ install_package()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 		then
-			install -dv /system/software/source/linux/include/asm
-			cp -Rv include/asm-i386/* /system/software/source/linux/include/asm
-			cp -Rv include/linux/     /system/software/source/linux/include
-			chown -R 100:1000         /system/software/source/linux
+			install -dv                    /system/software/source/linux/include/asm &&
+			cp      -Rv include/asm-i386/* /system/software/source/linux/include/asm &&
+			cp      -Rv include/linux/     /system/software/source/linux/include     &&
+			chown   -R  100:1000           /system/software/source/linux             &&
 
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
 		fi
