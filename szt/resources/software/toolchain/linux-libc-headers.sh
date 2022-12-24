@@ -45,8 +45,8 @@ main()
 
 setup()
 {
-	echo "URL3: $URL"
-	download ${URL} ${PKG_DIR} ${PKG}
+	echo "URL3: $URL"                 &&
+	download ${URL} ${PKG_DIR} ${PKG} &&
 	download ${URL} ${PKG_DIR} ${PATCH1}
 }
 
