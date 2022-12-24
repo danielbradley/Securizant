@@ -111,7 +111,7 @@ install_package()
 
 complete()
 {
-	if [ -f $BUILD/$PACKAGE-$VERSION/SUCCESS.ACTIVATE ]
+	if [ -f $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL ]
 	then
 		rm -rf $BUILD/$PACKAGE-$VERSION/*
 	fi
