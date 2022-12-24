@@ -60,7 +60,7 @@ unpack_package()
 
 apply_patches()
 {
-	if [ -f $BUILD/$PACKAGE-$VERSION/doc ]
+	if [ -d $BUILD/$PACKAGE-$VERSION/doc ]
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
