@@ -47,6 +47,7 @@ setup()
 {
 	echo "URL3: $URL"
 	download ${URL} ${PKG_DIR} ${PKG}
+	download ${URL} ${PKG_DIR} ${PATCH1}
 }
 
 unpack_package()
