@@ -76,7 +76,6 @@ unpack_package()
 	if [ ! -d $BUILD/$PACKAGE-$VERSION ]
 	then
 		tar -C $BUILD -xvf $SOURCE/${PKG_DIR}/${PKG} $UNZIP
-		tar -C $BUILD/$PACKAGE-$VERSION -xvf $SOURCE/${PKG_DIR}/${PKG2} $UNZIP
 	fi
 }
 
