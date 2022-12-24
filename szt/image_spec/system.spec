@@ -11,6 +11,7 @@
 <dir path="/default/settings"     source="static/default_settings/2008"/>
 <dir path="/default/software"/>
 <dir path="/default/data/_system"/>
+<dir path="/default/data/_system/empty"/>
 <dir path="/default/data/_system/lib"/>
 <dir path="/default/data/_system/log"/>
 <dir path="/default/data/_system/run"/>
