@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 GNU_BASE=/system/software/commands
 CATEGORY=development
 PACKAGE=binutils
-VERSION=2.15.94.0.2.2
+VERSION=2.16.1
 DNAME=gnu-3.4.3
 ARCHIVE=tar.bz2
 UNZIP=-j
