@@ -4,8 +4,8 @@ source /mnt/software/download.sh
 
 SERVICES_BASE=/system/software/services
 CATEGORY=
-PACKAGE=xinetd
-VERSION=2.3.13
+PACKAGE=xinetd-xinetd
+VERSION=2.3.14
 ARCHIVE=tar.gz
 UNZIP=-z
 
