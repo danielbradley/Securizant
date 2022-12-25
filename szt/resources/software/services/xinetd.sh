@@ -6,8 +6,8 @@ SERVICES_BASE=/system/software/services
 CATEGORY=
 PACKAGE=xinetd-xinetd
 VERSION=2.3.14
-ARCHIVE=tar.gz
-UNZIP=-z
+ARCHIVE=tar.bz2
+UNZIP=-j
 
 URL=$RESOURCE_URL
 PKG_DIR=core/services
