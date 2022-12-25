@@ -1,4 +1,4 @@
-<image name="development.e2" mountpoint="/system/features/development" fs="ext2" script="scripts/development.script" size="200" mountflags="loop">
+<image name="development.e2" mountpoint="/system/features/development" fs="ext2" script="scripts/development.script" size="500" mountflags="loop">
 <dir path="/software"/>
 <dir path="/software/bin"/>
 <dir path="/software/commands"/>
