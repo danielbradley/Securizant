@@ -44,8 +44,6 @@ main()
 setup()
 {
 	download ${URL} ${PKG_DIR} ${PKG}
-	download ${URL} ${PKG_DIR} ${PATCH1}
-	download ${URL} ${PKG_DIR} ${PATCH2}
 }
 
 unpack_package()
@@ -63,9 +61,11 @@ apply_patches()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCH ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1 &&
-			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH2 &&
 			sed -i 's/install_to_$(INSTALL_DEST) //' libiberty/Makefile.in &&
+			sed -i 's/^XCFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in &&
+			sed -i 's@\./fixinc\.sh@-c true@'              gcc/Makefile.in &&
+			sed -i 's/@have_mktemp_command@/yes/'          gcc/gccbug.in   &&
+
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCH
 		fi
 	fi
