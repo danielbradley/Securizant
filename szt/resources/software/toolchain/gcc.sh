@@ -141,7 +141,7 @@ modify_package()
 
 			$Gcc -dumpspecs > $Specfile                    &&
 
-			sed -i 's@ /lib/ld-linux.so.2@ /system/software/lib/ld-linux.so.2@g' \
+			sed -i 's@/lib/ld-linux.so.2@/system/software/lib/ld-linux.so.2@g' \
 				"$Specfile" &&
 			sed -i '/\*startfile_prefix_spec:/{n;s@.*@/system/software/lib/ @}' \
 				"$Specfile" &&
