@@ -1,6 +1,6 @@
-BOS_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2006/source"
-SZT_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2006/source"
-  RESOURCE_URL="http://cdn.securizant.org/resources/Securizant/2006/source" # deprecated
+BOS_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2023/source"
+SZT_SOURCE_URL="http://cdn.securizant.org/resources/Securizant/2023/source"
+  RESOURCE_URL="http://cdn.securizant.org/resources/Securizant/2023/source" # deprecated
 
 BUILD=/local/bos/target
 NAME=Securizant-LFS-Core-2006
