@@ -9,7 +9,7 @@ NAME=Securizant-LFS-Core-2006
 TARGET=$BUILD/${NAME}
 PROFILE=dev.txt
 
-BOS_VERSION=2006.08-6.2
+BOS_VERSION=2023.03-11.3
 EDITION=LFS                     #   Used in X0_CreateISO.sh
 RELEASE=2006                    #   to specify disk image folder path.
 KERNEL=linux-2.6.11.12
