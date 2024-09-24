@@ -53,7 +53,7 @@ unpack_package()
 #			wget ${SRC}/${PKG_DIR}/${PKG}
 #		fi
 
-		tar -C $BUILD -jxvf ${SOURCE}/${PKG_DIR}/${PKG} $UNZIP
+		tar -C $BUILD -xvf ${SOURCE}/${PKG_DIR}/${PKG} $UNZIP
 		#tar -C $BUILD -jxvf $SOURCE/$PACKAGE-$VERSION.tar.bz2
 	fi
 }
