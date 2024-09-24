@@ -8,9 +8,9 @@ source /mnt/software/download.sh
 LIBRARIES_BASE=/system/software/libraries
 CATEGORY=terminal
 PACKAGE=ncurses
-VERSION=5.4
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=5.5
+ARCHIVE=tar.gz
+UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/libraries
