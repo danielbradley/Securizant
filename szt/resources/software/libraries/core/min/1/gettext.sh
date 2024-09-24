@@ -9,9 +9,9 @@ source /mnt/software/altersource.sh
 LIBRARIES_BASE=/system/software/libraries
 CATEGORY=i18n
 PACKAGE=gettext
-VERSION=0.14.3
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=0.14.5
+ARCHIVE=tar.gz
+UNZIP=-z
 
 URL=$RESOURCE_URL
 PKG_DIR=core/libraries
