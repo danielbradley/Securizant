@@ -100,7 +100,7 @@ install_package()
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
 	                make install &&
-			chmod -v 755 $DEST/lib/*.5.4 &&
+			chmod -v 755 $DEST/lib/*.${VERSION} &&
 			chmod -v 644 $DEST/lib/libncurses++.a &&
 			ln -s ncurses/ncurses.h $DEST/include &&
 			ln -s ncurses.h $DEST/include/curses.h &&
