@@ -70,6 +70,7 @@
 <link location="/default/settings/lsb/group"         target="../users/group"/>
 <link location="/default/settings/lsb/ld.so.conf"    target="../system/meta/ld.so.conf"/>
 <link location="/default/settings/lsb/login.defs"    target="../users/meta/login.defs"/>
+<link location="/default/settings/lsb/nsswitch.conf" target="../system/meta/nsswitch.conf"/>
 <link location="/default/settings/lsb/passwd"        target="../users/passwd"/>
 <link location="/default/settings/lsb/profile"       target="../users/meta/profile"/>
 <link location="/default/settings/lsb/shadow"        target="../private/shadow"/>
