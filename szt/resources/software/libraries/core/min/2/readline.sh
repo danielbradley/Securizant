@@ -38,7 +38,7 @@ main()
 prepare()
 {
 	download ${URL} ${PKG_DIR} ${PKG}
-	download ${URL} ${PKG_DIR} ${PATCH1}
+	download ${URL} ${PKG_DIR} ${PATCH}
         mkdir -p $LIBRARIES_BASE/$CATEGORY/$PACKAGE-$VERSION
 }
 
