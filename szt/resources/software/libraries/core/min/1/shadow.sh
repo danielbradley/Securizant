@@ -76,11 +76,11 @@ configure_package()
 			cd $BUILD/$PACKAGE-$VERSION &&
 #			CFLAGS="-march=i386"
 			./configure \
-				--prefix=$DEST \
-				--sysconfdir=/local/settings/users/meta \
-        	                --libdir=$DEST/lib \
-				--enable-shared &&
-#				--host=$CHOST --target=$CHOST &&
+                --without-selinux  \
+				--enable-shared    \
+				--libdir=$DEST/lib \
+				--prefix=$DEST     \
+				--sysconfdir=/local/settings/users/meta &&
 			sed -i 's/groups$(EXEEXT) //' src/Makefile &&
 			sed -i '/groups/d' man/Makefile &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
