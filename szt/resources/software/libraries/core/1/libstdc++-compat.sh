@@ -12,7 +12,7 @@ source /mnt/software/download.sh
 GNU_BASE=/system/software/libraries
 CATEGORY=system
 PACKAGE=gcc
-VERSION=3.3.6
+VERSION=x.x.x
 DNAME=libstdc++-5
 ARCHIVE=tar.bz2
 UNZIP=-j

@@ -1,3 +1,2 @@
-libstdc++-compat.sh
 openssl.sh
 
