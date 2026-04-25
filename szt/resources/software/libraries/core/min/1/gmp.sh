@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 LIBRARIES_BASE=/system/software/libraries
 CATEGORY=math
 PACKAGE=gmp
-VERSION=6.1.2
+VERSION=x.x.x
 ARCHIVE=tar.bz2
 UNZIP=-j
 
