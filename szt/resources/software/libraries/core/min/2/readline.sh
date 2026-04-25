@@ -8,14 +8,13 @@ source /mnt/software/download.sh
 LIBRARIES_BASE=/system/software/libraries
 CATEGORY=terminal
 PACKAGE=readline
-VERSION=5.0
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=5.1
+ARCHIVE=tar.gz
 
 URL=$RESOURCE_URL
 PKG_DIR=core/libraries
 PKG=$PACKAGE-$VERSION.$ARCHIVE  
-PATCH1=$PACKAGE-$VERSION-fixes-1.patch
+PATCH=$PACKAGE-$VERSION-fixes-3.patch
 
 DEST=$LIBRARIES_BASE/$CATEGORY/$PACKAGE-$VERSION
 
@@ -47,7 +46,7 @@ unpack_package()
 {
 	if [ ! -d $BUILD/$PACKAGE-$VERSION ]
 	then
-		tar -C $BUILD -jxvf $SOURCE/$PKG_DIR/$PKG
+		tar -C $BUILD -xvf $SOURCE/$PKG_DIR/$PKG
 	fi
 }
 
@@ -57,8 +56,10 @@ patch_package()
 	then
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
-			cd $BUILD/$PACKAGE-$VERSION &&
-			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1 &&
+			cd $BUILD/$PACKAGE-$VERSION                  &&
+			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH        &&
+			sed -i '/MV.*old/d' Makefile.in              &&
+			sed -i '/{OLDSUFF}/c:' support/shlib-install &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
@@ -71,11 +72,8 @@ configure_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-#			CFLAGS="-march=i386"
 			./configure \
-        	                --prefix=$LIBRARIES_BASE/$CATEGORY/$PACKAGE-$VERSION
-#				--enable-shared
-#				--host=$CHOST --target=$CHOST &&
+				--prefix=$LIBRARIES_BASE/$CATEGORY/$PACKAGE-$VERSION &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
 	fi
@@ -88,7 +86,7 @@ make_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make SHLIB_XLDFLAGS=-lncurses &&
+			make SHLIB_LIBS=-lncurses   &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
