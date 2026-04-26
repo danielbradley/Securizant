@@ -38,7 +38,7 @@ main()
 prepare()
 {
 	download ${RESOURCE_URL} ${PKG_DIR} ${PKG}
-	#download ${RESOURCE_URL} ${PKG_DIR} ${PATCH1}
+	download ${RESOURCE_URL} ${PKG_DIR} ${PATCH1}
 	mkdir -p $LIBRARIES_BASE/$CATEGORY/$PACKAGE-$VERSION
 }
 
@@ -57,7 +57,7 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			#patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1
+			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1
 
 			sed -i 's@/etc@/local/settings/lsb@g' `grep -l -R "/etc" *` &&
 			sed -i 's@/dev@/system/devices@g'     `grep -l -R "/dev" *` &&
