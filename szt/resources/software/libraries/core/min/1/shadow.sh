@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 LIBRARIES_BASE=/system/software/libraries
 CATEGORY=system
 PACKAGE=shadow
-VERSION=4.0.10
+VERSION=4.0.15
 ARCHIVE=tar.gz
 
 URL=$RESOURCE_URL
