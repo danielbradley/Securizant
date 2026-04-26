@@ -8,9 +8,8 @@ source /mnt/software/download.sh
 LIBRARIES_BASE=/system/software/libraries
 CATEGORY=system
 PACKAGE=shadow
-VERSION=4.0.15
-ARCHIVE=tar.bz2
-UNZIP=-j
+VERSION=4.0.10
+ARCHIVE=tar.gz
 
 URL=$RESOURCE_URL
 PKG_DIR=core/libraries
@@ -39,15 +38,15 @@ main()
 prepare()
 {
 	download ${RESOURCE_URL} ${PKG_DIR} ${PKG}
-	download ${RESOURCE_URL} ${PKG_DIR} ${PATCH1}
-        mkdir -p $LIBRARIES_BASE/$CATEGORY/$PACKAGE-$VERSION
+	#download ${RESOURCE_URL} ${PKG_DIR} ${PATCH1}
+	mkdir -p $LIBRARIES_BASE/$CATEGORY/$PACKAGE-$VERSION
 }
 
 unpack_package()
 {
 	if [ ! -d $BUILD/$PACKAGE-$VERSION ]
 	then
-		tar -C $BUILD -xvf ${SOURCE}/${PKG_DIR}/${PKG} $UNZIP
+		tar -C $BUILD -xvf ${SOURCE}/${PKG_DIR}/${PKG}
 	fi
 }
 
@@ -61,7 +60,7 @@ patch_package()
 			#patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1
 
 			sed -i 's@/etc@/local/settings/lsb@g' `grep -l -R "/etc" *` &&
-			sed -i 's@/dev@/system/devices@g' `grep -l -R "/dev" *` &&
+			sed -i 's@/dev@/system/devices@g'     `grep -l -R "/dev" *` &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED
 		fi
 	fi
