@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 LIBRARIES_BASE=/system/software/libraries
 CATEGORY=system
 PACKAGE=shadow
-VERSION=4.0.15
+VERSION=4.0.9
 ARCHIVE=tar.bz2
 UNZIP=-j
 
@@ -76,11 +76,11 @@ configure_package()
 			cd $BUILD/$PACKAGE-$VERSION &&
 #			CFLAGS="-march=i386"
 			./configure \
-                --without-selinux  \
-				--enable-shared    \
-				--libdir=$DEST/lib \
-				--prefix=$DEST     \
-				--sysconfdir=/local/settings/users/meta &&
+				--prefix=$DEST \
+				--sysconfdir=/local/settings/users/meta \
+        	                --libdir=$DEST/lib \
+				--enable-shared &&
+#				--host=$CHOST --target=$CHOST &&
 			sed -i 's/groups$(EXEEXT) //' src/Makefile &&
 			sed -i '/groups/d' man/Makefile &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
