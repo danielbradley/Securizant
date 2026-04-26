@@ -21,7 +21,7 @@ l0:0:wait:/system/startup/modules/halt.script
 l6:6:wait:/system/startup/modules/reboot.script
 
 # These are the standard console login getties in multiuser mode:
-c1:1235:respawn:/system/software/sbin/agetty  38400 tty1 linux -l /system/software/bin/login
+c1:1235:respawn:/system/software/sbin/agetty  38400 tty1 linux -l "/system/software/bin/login -f root"
 c2:1235:respawn:/system/software/sbin/agetty  38400 tty2 linux -l /system/software/bin/login
 c3:1235:respawn:/system/software/sbin/agetty  38400 tty3 linux -l /system/software/bin/login
 c4:1235:respawn:/system/software/sbin/agetty  38400 tty4 linux -l /system/software/bin/login
