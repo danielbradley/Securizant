@@ -8,7 +8,7 @@ source /mnt/software/download.sh
 LIBRARIES_BASE=/system/software/libraries
 CATEGORY=system
 PACKAGE=shadow
-VERSION=4.0.9
+VERSION=4.0.15
 ARCHIVE=tar.bz2
 UNZIP=-j
 
@@ -58,7 +58,7 @@ patch_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.PATCHED ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-			patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1
+			#patch -Np1 -i $SOURCE/$PKG_DIR/$PATCH1
 
 			sed -i 's@/etc@/local/settings/lsb@g' `grep -l -R "/etc" *` &&
 			sed -i 's@/dev@/system/devices@g' `grep -l -R "/dev" *` &&
@@ -76,13 +76,13 @@ configure_package()
 			cd $BUILD/$PACKAGE-$VERSION &&
 #			CFLAGS="-march=i386"
 			./configure \
-				--prefix=$DEST \
-				--sysconfdir=/local/settings/users/meta \
-        	                --libdir=$DEST/lib \
-				--enable-shared &&
-#				--host=$CHOST --target=$CHOST &&
-			sed -i 's/groups$(EXEEXT) //' src/Makefile &&
-			sed -i '/groups/d' man/Makefile &&
+                --without-selinux  \
+				--enable-shared    \
+				--libdir=$DEST/lib \
+				--prefix=$DEST     \
+				--sysconfdir=/local/settings/users/meta
+			#sed -i 's/groups$(EXEEXT) //' src/Makefile &&
+			#sed -i '/groups/d' man/Makefile &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.CONFIGURE
 		fi
 	fi
@@ -95,7 +95,7 @@ make_package()
 		if [ ! -f $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE ]
 		then
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make &&
+			make &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.MAKE
 		fi
 	fi
@@ -109,7 +109,7 @@ install_package()
 		then
 
 			cd $BUILD/$PACKAGE-$VERSION &&
-	                make install &&
+			make install &&
 			mkdir -p /local/settings/users/meta &&
 			cp etc/{limits,login.access,login.defs} /local/settings/users/meta &&
 			touch $BUILD/$PACKAGE-$VERSION/SUCCESS.INSTALL
