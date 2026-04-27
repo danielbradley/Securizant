@@ -9,7 +9,7 @@ LIBRARIES_BASE=/system/software/libraries
 CATEGORY=system
 PACKAGE=shadow
 VERSION=4.0.15
-ARCHIVE=tar.gz
+ARCHIVE=tar.bz2
 
 URL=$RESOURCE_URL
 PKG_DIR=core/libraries
